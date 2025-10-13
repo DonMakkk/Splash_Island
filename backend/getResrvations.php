@@ -1,0 +1,24 @@
+<?php
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "splash_island_data";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+$sql = "SELECT id, name, email, message FROM user_message";
+$result = $conn->query($sql);
+
+$messages = [];
+while ($row = $result->fetch_assoc()) {
+    $messages[] = $row;
+}
+
+header('Content-Type: application/json');
+echo json_encode($messages);
+$conn->close();
+?>
