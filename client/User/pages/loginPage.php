@@ -1,3 +1,36 @@
+<?php
+session_start();
+$isEmailExist = "";
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  
+    $conn = new mysqli("localhost", "root", "", "splash_island_data");
+    
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+      if (isset($_POST['email'])) {
+   
+    $email = $_POST["email"];
+    $password = $_POST["password"];
+
+    $isEmailAlreadyExist = "SELECT * FROM user_account WHERE email = ?";
+    $stmt = $conn->prepare($isEmailAlreadyExist);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+         $_SESSION['email'] = $email;
+         $conn->close();
+      header("Location: Bookingpage.php");
+    exit();
+    } else {
+      $isEmailExist = "incorrect email or password";
+    }
+  }
+  }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -34,6 +67,7 @@
         <img src="../assets/logo.png" alt="" class="w-25 h-50 align-middle d-flex justify-content-center text-center">
 
         <h1 class="h3 mb-3 fw-normal">Please Sign In</h1>
+        <p><?php echo  $isEmailExist; ?></p>
         <div class="form-floating">
             <input type="email" name="email" id="floatingInput" class="form-control" placeholder="name@gmail.com">
             <label for="floatingInput">Email</label>
@@ -57,3 +91,4 @@
     ></script>
 </body>
 </html>
+

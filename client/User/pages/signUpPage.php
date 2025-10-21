@@ -1,3 +1,50 @@
+<?php
+  $isEmailExist = "";
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  session_start();
+    $conn = new mysqli("localhost", "root", "", "splash_island_data");
+
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    $full_name = $_POST["full_name"];
+    $email = $_POST["email"];
+    $Userpassword = $_POST["password"];
+    $phone_num = $_POST["phone_num"];
+    $reservation = null; // No reservation yet
+  
+    // Use NULL properly in SQL
+    $reservation_value = $reservation === null ? "NULL" : "'$reservation'";
+    if (isset($_POST['email'])) {
+    $email = $_POST['email'];
+
+    // check if email exists
+    $isEmailAlreadyExist = "SELECT * FROM user_account WHERE email = ?";
+    $stmt = $conn->prepare($isEmailAlreadyExist);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $isEmailExist = "Email already exists";
+    } else {
+       $sql = "INSERT INTO user_account (full_name, email, password, phone_number, reservation)
+            VALUES ('$full_name', '$email', '$Userpassword', '$phone_num', $reservation_value)";
+    $result = $conn->query($sql);
+     $_SESSION['email'] = $email;
+    $conn->close();
+      header("Location: Bookingpage.php");
+    exit();
+
+    }
+}
+  
+   
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -17,7 +64,7 @@
       integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
       crossorigin="anonymous"
     />
-   <link rel="stylesheet" href="./User/pages/style.css" />
+   <link rel="stylesheet" href="style.css" />
     <script
       type="module"
       src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
@@ -34,13 +81,14 @@
     <form action="signUpPage.php" method="post" class="card p-md-5 p-2 align-middle d-flex flex-column gap-2 w-50  w-sm-100  ">
         <!-- <img src="./User/assets/logo.png" alt=""> -->
         <h1 class="h3 mb-3 fw-normal">Please Sign In</h1>
+        <h2><?php echo $isEmailExist;?></h2>
         <div class="form-floating">
             <input type="email" name="email" id="floatingInput" class="form-control" placeholder="name@gmail.com">
             <label for="floatingInput">Email</label>
         </div>
         <div class="form-floating">
             <input type="password" name="password" id="floatinPassword" placeholder="Password" class="form-control">
-            <label for="floatingPassword">Password</label>
+            <label for="floatinPassword">Password</label>
         </div>
           <div class="form-floating">
             <input type="text" name="full_name" id="floatinName" placeholder="Password" class="form-control">
@@ -51,7 +99,7 @@
             <label for="floatinNumber">Phone Number</label>
         </div>
         <div class="form-check text-start my-3">
-            <input type="checkbox" name="remember-me" id="checkDefault" class="form-check-input">
+            <input type="checkbox" name="remember-me" id="form-check-label" class="form-check-input">
             <label for="form-check-label">Remember me</label>
         </div>
         <button class="btn btn-primary w-100 py-2" type="submit">Create Account</button>
@@ -71,27 +119,3 @@
 </html>
 
 
-<?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $conn = new mysqli("localhost", "root", "", "splash_island_data");
-
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-
-    $full_name = $_POST["full_name"];
-    $email = $_POST["email"];
-    $Userpassword = $_POST["password"];
-    $phone_num = $_POST["phone_num"];
-    $reservation = null; // No reservation yet
-
-    // Use NULL properly in SQL
-    $reservation_value = $reservation === null ? "NULL" : "'$reservation'";
-
-    $sql = "INSERT INTO user_account (full_name, email, password, phone_number, reservation)
-            VALUES ('$full_name', '$email', '$Userpassword', '$phone_num', $reservation_value)";
-
-    $_SESSION["USERNAME"] = "POGI";
-    $conn->close();
-}
-?>

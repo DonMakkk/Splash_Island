@@ -1,3 +1,38 @@
+<?php
+session_start();
+if($_SERVER["REQUEST_METHOD"] == "POTS"){
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "splash_island_data";
+
+$full_name = $_POST["full_name"];
+$email = $_POST["email"];
+$phone_num = $_POST["phone_num"];
+$date = $_POST["date"];
+$message = $_POST["message"];
+
+$reservation = [];
+$json_data = json_encode($reservation);
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+
+$sql = "INSERT INTO `user_message`(`name`, `email`, `phone_number`, `date`, `message`) 
+        VALUES ('$full_name', '$email', '$phone_num', '$date', '$message')";
+
+
+$result = $conn->query($sql);
+echo $result;
+$conn->close();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -67,7 +102,7 @@
     </div>
    <!-- FORM AREA -->
     <header class="p-md-5 justify-content-center d-flex bookingHeader">
-      <img src="../assets/Deluxe Warm Earth Suite.jpg" alt="" class="w-100 object-fit-cover">
+      <img src="../assets/DeluxeWarmEarthSuite.jpg" alt="" class="w-100 object-fit-cover">
     </header>
     <main class="p-5 d-md-flex flex-md-row d-sm-flex flex-sm-column w-100 gap-5 p-md-5">
       <div>
@@ -254,6 +289,7 @@
       Conduct | Cyber Security <br />
       © 2025 Splash Island Co. All Rights Reserved. ICP license: 22007722
     </h5>
+    <p><?php echo $_SESSION['email']; ?></p>
     <script src="../../homepageScript.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
@@ -278,33 +314,3 @@
   </body>
 </html>
 
-<?php
-if($_SERVER["REQUEST_METHOD"] == "POTS"){
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "splash_island_data";
-
-$full_name = $_POST["full_name"];
-$email = $_POST["email"];
-$phone_num = $_POST["phone_num"];
-$date = $_POST["date"];
-$message = $_POST["message"];
-
-$reservation = [];
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-$sql = "INSERT INTO `user_message`(`name`, `email`, `phone_number`, `date`, `message`) 
-        VALUES ('$full_name', '$email', '$phone_num', '$date', '$message')";
-
-
-$result = $conn->query($sql);
-echo $result;
-$conn->close();
-}
-?>
