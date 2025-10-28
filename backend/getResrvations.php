@@ -10,7 +10,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = "SELECT id, name, email, message FROM user_message";
+$sql = "SELECT reservation FROM user_account";
 $result = $conn->query($sql);
 
 $messages = [];

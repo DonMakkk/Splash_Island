@@ -1,18 +1,19 @@
 <?php
 session_start();
-if($_SERVER["REQUEST_METHOD"] == "POTS"){
+if($_SERVER["REQUEST_METHOD"] == "POST"){
 $servername = "localhost";
 $username = "root";
 $password = "";
 $dbname = "splash_island_data";
 
-$full_name = $_POST["full_name"];
-$email = $_POST["email"];
-$phone_num = $_POST["phone_num"];
-$date = $_POST["date"];
+$arrivalDate = $_POST["arrival"];
+$departureDate = $_POST["departure"];
+$roomQuantity = $_POST["room"];
+$adultGuestsQuantity = $_POST["adults"];
+$childrenGuestsQuantity = $_POST["children"];
 $message = $_POST["message"];
-
-$reservation = [];
+$reference_number = rand(5000,9999999);
+$reservation = ["referenceNum" => $reference_number, "arrival" => $arrivalDate, "departure" => $departureDate, "rooms" => $roomQuantity, "adults" => $adultGuestsQuantity, "child" => $childrenGuestsQuantity, "message" => $message];
 $json_data = json_encode($reservation);
 
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -21,14 +22,32 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
+ $email =  $_SESSION["email"];
+if($_SESSION['login']){
+  $result = $conn->query("SELECT reservation FROM user_account where email = '$email'");
+  $row = $result->fetch_assoc();
+
+  if($row['reservation'] == null){
+    $cart = [];
+  }else{
+    $cart = json_decode($row['reservation'], true);
+  }
+  $cart[] = $reservation;
+  $update_cart = json_encode($cart);
+  $stmt = $conn->prepare("UPDATE user_account SET reservation = ? WHERE email = ?");
+  $stmt->bind_param("ss",$update_cart,$email);
+  $stmt->execute();
+  echo "save in database";
+    header("Location: Bookingpage.php");
+    exit();
+}else{
+    echo "not save in database";
+    header("Location: signUpPage.php");
+    exit();
+}
 
 
-$sql = "INSERT INTO `user_message`(`name`, `email`, `phone_number`, `date`, `message`) 
-        VALUES ('$full_name', '$email', '$phone_num', '$date', '$message')";
 
-
-$result = $conn->query($sql);
-echo $result;
 $conn->close();
 }
 ?>
@@ -131,11 +150,11 @@ $conn->close();
         <div class="d-flex flex-row gap-2 pe-2">
           <div class="w-50">
             <label for="">Date of Arrival</label>
-           <input type="datetime-local" name="" id="arrival" class="form-control ">
+           <input type="datetime-local" name="arrival" id="arrival" class="form-control ">
           </div>
         <div class="w-50">
           <label for="">Date of Departure</label>
-           <input type="datetime-local" name="" id="departure" class="form-control">
+           <input type="datetime-local" name="departure" id="departure" class="form-control">
           </div>
         </div>
         <!-- ROOM TYPE -->
@@ -149,21 +168,21 @@ $conn->close();
     <div class="d-flex flex-row gap-2 ps-3 pe-2">
       <h6 class="fw-light pt-2">Room(s)</h6>
       <div class="d-flex flex-row justify-content-between ms-auto input-group w-50"> <button class="btn btn-outline-secondary" type="button" id="minus-button">-</button>
-      <input type="number" class="form-control text-center" value="1" min="1" id="quantity-input" name="room-quantity">
+      <input type="number" class="form-control text-center" value="1" min="1" id="quantity-input" name="room">
       <button class="btn btn-outline-secondary" type="button" id="plus-button">+</button>
     </div>
    </div>
    <div class="d-flex flex-row gap-2 ps-3 pe-2">
       <h6 class="fw-light pt-2 ">Adult(s)</h6>
       <div class="d-flex flex-row justify-content-between ms-auto input-group w-50"> <button class="btn btn-outline-secondary" type="button" id="minus-button">-</button>
-      <input type="number" class="form-control text-center" value="1" min="1" id="quantity-input" name="adult-quantity">
+      <input type="number" class="form-control text-center" value="1" min="1" id="quantity-input" name="adults">
       <button class="btn btn-outline-secondary" type="button" id="plus-button">+</button>
     </div>
 </div>
    <div class="d-flex flex-row gap-2 ps-3 pe-2">
       <h6 class="fw-light pt-2 ">Children (under 12)</h6>
       <div class="d-flex flex-row justify-content-between ms-auto input-group w-50"> <button class="btn btn-outline-secondary" type="button" id="minus-button">-</button>
-      <input type="number" class="form-control text-center" value="1" min="1" id="quantity-input" name="children-quantity">
+      <input type="number" class="form-control text-center" value="1" min="1" id="quantity-input" name="children">
       <button class="btn btn-outline-secondary" type="button" id="plus-button">+</button>
     </div>
 </div>
@@ -175,15 +194,9 @@ $conn->close();
             placeholder="Your Message"
             class="p-1 h-50 text-black"
           ></textarea>
-
- 
   </ul>
-
-
-
-
 </div>
-<input type="submit" value="Book now" class="form-control h-50 " id="reservationBookBtn" >
+<input type="submit" value="Book now" class="form-control h-50 " >
     </form>
     </main>
     <!-- FOOTER PART -->
@@ -289,7 +302,7 @@ $conn->close();
       Conduct | Cyber Security <br />
       © 2025 Splash Island Co. All Rights Reserved. ICP license: 22007722
     </h5>
-    <p><?php echo $_SESSION['email']; ?></p>
+    
     <script src="../../homepageScript.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
@@ -300,17 +313,35 @@ $conn->close();
   const arrival = document.getElementById("arrival");
   const departure = document.getElementById("departure");
 
-  // Optional: prevent selecting past dates
+
   const today = new Date().toISOString().split("T")[0];
   arrival.min = today;
   departure.min = today;
-
-  // When arrival changes, set that as the minimum for departure
+  
   arrival.addEventListener("change", function() {
     departure.min = this.value;
+   
   });
+  
+ 
+  
+  const calculate_date = () => {
+    const arrival_date =  new Date(arrival.value);
+    const departure_date = new Date(departure.value);
+
+    if(isNaN(arrival_date || isNaN(departure_date))){
+      console.log("Enter both date");
+      return;
+    }
+
+    const dif_time = departure_date - arrival_date;
+    const days_of_stay = dif_time / (1000 * 60 * 60 * 24);
+
+    console.log(days_of_stay);
+  }
+  departure.addEventListener("change", calculate_date);
 </script>
-       <script src="bookingPageScript.js"></script>
+      
   </body>
 </html>
 

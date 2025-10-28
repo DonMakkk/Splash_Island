@@ -21,6 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($result->num_rows > 0) {
          $_SESSION['email'] = $email;
+         $_SESSION['login'] = true;
          $conn->close();
       header("Location: Bookingpage.php");
     exit();

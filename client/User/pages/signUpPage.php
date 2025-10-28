@@ -33,6 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             VALUES ('$full_name', '$email', '$Userpassword', '$phone_num', $reservation_value)";
     $result = $conn->query($sql);
      $_SESSION['email'] = $email;
+    $_SESSION['login'] = true;
     $conn->close();
       header("Location: Bookingpage.php");
     exit();
