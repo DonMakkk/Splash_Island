@@ -30,11 +30,11 @@
   </head>
   <body>
     <!-- NAVPART -->
-     <div class="container-fluid navDiv ">
-      <nav class="navbar navbar-expand-md ">
-        <a href="" class="navbar-brand overflow-hidden d-flex" >
+    <div class="container-fluid navDiv">
+      <nav class="navbar navbar-expand-md">
+        <a href="" class="navbar-brand overflow-hidden d-flex">
           <img src="../assets/logo.png" alt="" class="logo h-50" />
-          <h3 class=" ps-3 mt-3 fw-lighter" >Splash Resort</h3>
+          <h3 class="ps-3 mt-3 fw-lighter">Splash Resort</h3>
         </a>
         <button
           class="navbar-toggler me-2"
@@ -42,24 +42,31 @@
           data-bs-toggle="collapse"
           data-bs-target="#main-navigation"
         >
-          <span class="navbar-toggler-icon"></span>
+          <span class="navbar-toggler-icon burger-menu"></span>
         </button>
         <div class="collapse navbar-collapse pe-5" id="main-navigation">
           <ul class="navbar-nav ms-auto ps-5">
             <li class="nav-item nav-li">
-              <a href="Homepage.php" class="nav-link ">Home</a>
+              <a href="Homepage.php" class="nav-link">Home</a>
             </li>
             <li class="nav-item nav-li">
-              <a href="Amenitiespage.php" class="nav-link ">Amenities</a>
+              <a href="Amenitiespage.php" class="nav-link">Amenities</a>
             </li>
             <li class="nav-item nav-li">
-              <a href="Contactpage.php" class="nav-link ">Contact</a>
+              <a href="Contactpage.php" class="nav-link">Contact</a>
             </li>
             <li class="nav-item nav-li">
-              <a href="Bookingpage.php" class="nav-link ">Book Now</a>
+              <a href="Bookingpage.php" class="nav-link">Book Now</a>
             </li>
-              <li class="nav-item nav-li">
-              <button id="toggleMode" class=" border-0 h-100 bg-transparent"><ion-icon name="sunny-outline"></ion-icon></button>
+            <li class="nav-item nav-li">
+              <button id="toggleMode" class="border-0 h-100 bg-transparent">
+                <ion-icon name="sunny-outline"></ion-icon>
+              </button>
+            </li>
+            <li class="nav-item nav-li mt-2 ms-2">
+              <a href="Profilepage.php" id="toggleMode" class="border-0 h-100 bg-transparent">
+                <ion-icon name="person-circle-outline"></ion-icon>
+              </a>
             </li>
           </ul>
         </div>
@@ -80,11 +87,11 @@
       <div
         class="messageform d-flex justify-content-center align-content-center text-center mt-3 ms-auto  w-100"
       >
-        <form action="Homepage.php" method="post" class="d-flex card flex-column gap-2 w-50 p-2 ms-auto">
+        <form action="Contactpage.php" method="post" class="d-flex card flex-column gap-2 w-50 p-2 ms-auto">
           <div class="d-md-flex flex-md-row w-100 gap-2 d-flex flex-column column-gap-2">
            <div class="form-floating w-100 ">
-            <input type="text" name="first_name" id="floatingInput" class="form-control" placeholder="First Name">
-            <label for="floatingInput">First Name</label>
+            <input type="text" name="full_name" id="floatingInput" class="form-control" placeholder="Full Name">
+            <label for="floatingInput">Full Name</label>
         </div>
           <div class="form-floating w-100 ">
             <input type="email" name="email" id="floatingInput" class="form-control" placeholder="Email">
@@ -235,7 +242,7 @@
 </html>
 
 <?php
-if($_SERVER["REQUEST_METHOD"] == "POTS"){
+if($_SERVER["REQUEST_METHOD"] == "POST"){
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -244,7 +251,7 @@ $dbname = "splash_island_data";
 $full_name = $_POST["full_name"];
 $email = $_POST["email"];
 $phone_num = $_POST["phone_num"];
-$date = $_POST["date"];
+$date = date("Y-m-d");
 $message = $_POST["message"];
 
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -254,12 +261,15 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = "INSERT INTO `user_message`(`name`, `email`, `phone_number`, `date`, `message`) 
+$sql = "INSERT INTO `user_inquiries`(`full_name`, `email`, `phone_number`, `date`, `message`)
         VALUES ('$full_name', '$email', '$phone_num', '$date', '$message')";
 
-
 $result = $conn->query($sql);
-echo $result;
+if($result){
+    echo "Message sent successfully!";
+} else {
+    echo "Error: " . $sql . "<br>" . $conn->error;
+}
 $conn->close();
 }
 ?>

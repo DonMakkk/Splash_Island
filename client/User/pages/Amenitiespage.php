@@ -30,11 +30,11 @@
   </head>
   <body>
     <!-- NAVPART -->
-      <div class="container-fluid navDiv ">
-      <nav class="navbar navbar-expand-md ">
-        <a href="" class="navbar-brand overflow-hidden d-flex" >
+   <div class="container-fluid navDiv">
+      <nav class="navbar navbar-expand-md">
+        <a href="" class="navbar-brand overflow-hidden d-flex">
           <img src="../assets/logo.png" alt="" class="logo h-50" />
-          <h3 class=" ps-3 mt-3 fw-lighter" >Splash Island</h3>
+          <h3 class="ps-3 mt-3 fw-lighter">Splash Resort</h3>
         </a>
         <button
           class="navbar-toggler me-2"
@@ -42,24 +42,31 @@
           data-bs-toggle="collapse"
           data-bs-target="#main-navigation"
         >
-          <span class="navbar-toggler-icon"></span>
+          <span class="navbar-toggler-icon burger-menu"></span>
         </button>
         <div class="collapse navbar-collapse pe-5" id="main-navigation">
           <ul class="navbar-nav ms-auto ps-5">
             <li class="nav-item nav-li">
-              <a href="Homepage.php" class="nav-link ">Home</a>
+              <a href="Homepage.php" class="nav-link">Home</a>
             </li>
             <li class="nav-item nav-li">
-              <a href="Amenitiespage.php" class="nav-link ">Amenities</a>
+              <a href="Amenitiespage.php" class="nav-link">Amenities</a>
             </li>
             <li class="nav-item nav-li">
-              <a href="Contactpage.php" class="nav-link ">Contact</a>
+              <a href="Contactpage.php" class="nav-link">Contact</a>
             </li>
             <li class="nav-item nav-li">
-              <a href="Bookingpage.php" class="nav-link ">Book Now</a>
+              <a href="Bookingpage.php" class="nav-link">Book Now</a>
             </li>
-              <li class="nav-item nav-li">
-              <button id="toggleMode" class=" border-0 h-100 bg-transparent"><ion-icon name="sunny-outline"></ion-icon></button>
+            <li class="nav-item nav-li">
+              <button id="toggleMode" class="border-0 h-100 bg-transparent">
+                <ion-icon name="sunny-outline"></ion-icon>
+              </button>
+            </li>
+            <li class="nav-item nav-li mt-2 ms-2">
+              <a href="Profilepage.php" id="toggleMode" class="border-0 h-100 bg-transparent">
+                <ion-icon name="person-circle-outline"></ion-icon>
+              </a>
             </li>
           </ul>
         </div>

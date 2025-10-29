@@ -1,3 +1,24 @@
+<?php
+    include "../../backend/databaseconfig.php";
+
+    $sql = "SELECT id, full_name, email, date, phone_number, message FROM user_inquiries";
+    $result = $conn->query($sql);
+    
+    if (isset($_GET['delete'])) {
+  $id = $_GET['delete'];
+  $conn->query("DELETE FROM user_inquiries WHERE ID=$id");
+  header("Location: " . $_SERVER['PHP_SELF']);
+  exit();
+  
+  function showInquiries(){
+
+  }
+  function showReservation(){
+    
+  }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -96,7 +117,32 @@
     </tr>
   </thead>
   <tbody  id="messageContainer">
-  
+    <?php
+       if ($result->num_rows > 0 ) {
+            while ($data = $result->fetch_assoc()) {
+
+               echo "<tr>";
+               echo "<th scope='row'> ". $data['id'] . "</th>";
+               echo "<td>". $data['full_name'] . "</td>";
+               echo "<td>" . $data['email'] . "</td>";
+               echo "<td>" . $data['date'] . "</td>";
+               echo  "<td>" . $data['message'] . "</td>";
+               echo "<td>";
+               echo '<a href="?delete=' . $data["id"] . '" class="btn btn-sm btn-danger" " ">Delete</a>';
+               echo '</td>';
+               echo"</tr>";
+            }
+        } else {
+              echo "<tr>";
+               echo "<th scope='row'> No Data Yet</th>";
+               echo "<td>No Data Yet</td>";
+               echo "<td>No Data Yet</td>";
+               echo "<td>No Data Yet</td>";
+               echo  "<td>No Data Yet</td>";
+             
+               echo"</tr>";
+        }
+        ?>
   </tbody>
 </table>
 

@@ -64,6 +64,11 @@
                 <ion-icon name="sunny-outline"></ion-icon>
               </button>
             </li>
+            <li class="nav-item nav-li mt-2 ms-2">
+              <a href="Profilepage.php" id="toggleMode" class="border-0 h-100 bg-transparent">
+                <ion-icon name="person-circle-outline"></ion-icon>
+              </a>
+            </li>
           </ul>
         </div>
       </nav>
@@ -493,8 +498,7 @@
     <script src="../../homepageScript.js"></script>
   </body>
 </html>
-
-<!-- <?php
+<?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 $servername = "localhost";
 $username = "root";
@@ -522,4 +526,4 @@ $result = $conn->query($sql);
 
 $conn->close();
 }
-?> -->
+?> 

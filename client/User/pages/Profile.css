@@ -1,0 +1,156 @@
+body {
+  font-family: Roboto, sans-serif;
+  background: #1b1f22;
+  color: #fff;
+  transition: 0.4s;
+}
+
+.light-mode { background: #f8f9fa; color: #000; }
+
+.navDiv { background: #15181a; transition: 0.4s; }
+.light-mode .navDiv { background: #fff; }
+.nav-link { color: #fff !important; }
+.light-mode .nav-link { color: #000 !important; }
+
+.title-text { color: #fff; transition: 0.4s; }
+.light-mode .title-text { color: #000; }
+
+.InfoDiv {
+  background: #2a2d31;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0,0,0,.3);
+  max-width: 600px;
+  margin-top: 50px;
+  transition: 0.4s;
+}
+.light-mode .InfoDiv { background: #fff; }
+
+.infoBox {
+  background: #212428;
+  border: 1px solid #333;
+  border-radius: 5px;
+  padding: 8px 12px;
+  margin-bottom: 10px;
+}
+.light-mode .infoBox { background: #f2f2f2; color: #000; }
+
+.infoBox input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: inherit;
+  outline: none;
+  margin-top: 5px;
+  padding: 2px;
+}
+
+.info-text { margin-bottom: 15px; line-height: 1.8; }
+.info-label { font-weight: bold; margin-right: 8px; }
+
+.reference-number { font-weight: 600; color: #ccc; }
+.light-mode .reference-number { color: #000; }
+
+.footer { font-size: 14px; text-align: center; margin-top: 50px; color: #aaa; }
+.light-mode .footer { color: #333; }
+
+.profile-dropdown {
+  position: absolute;
+  top: 60px;
+  right: 15px;
+  display: none;
+  flex-direction: column;
+  width: 160px;
+  background: #2a2d31;
+  border: 1px solid #444;
+  border-radius: 10px;
+  padding: 8px;
+  z-index: 1000;
+}
+.light-mode .profile-dropdown { background: #fff; border-color: #ddd; }
+
+.profile-dropdown button {
+  border: none;
+  background: none;
+  padding: 8px;
+  text-align: left;
+  color: #fff;
+  border-radius: 5px;
+}
+.profile-dropdown button:hover { background: #000; color: #fff; }
+.light-mode .profile-dropdown button { color: #000; }
+
+.icon-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 22px;
+  margin-left: 20px;
+}
+.light-mode .icon-btn { color: #000; }
+
+.navbar-toggler { border: none; background: none; color: #fff; font-size: 26px; }
+.light-mode .navbar-toggler { color: #000; }
+
+@media (max-width: 991px) {
+  .navbar-collapse {
+    background: #15181a;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: left;
+  }
+  .light-mode .navbar-collapse { background: #fff; }
+  .navbar-collapse .nav-link { display: block; margin: 5px 0; }
+
+  .mobile-icons {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .profile-dropdown.mobile-show {
+    position: relative;
+    top: 5px;
+    right: 0;
+    display: flex !important;
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 0;
+  }
+
+  .profile-dropdown.mobile-show button {
+    background: #2a2d31;
+    border-radius: 8px;
+    margin-top: 5px;
+    color: #fff;
+  }
+
+  .light-mode .profile-dropdown.mobile-show button {
+    background: #eee;
+    color: #000;
+  }
+}
+#cancelBtn {
+  display: block;
+  margin-left: auto;
+  padding: 8px 20px;
+}
+
+/* ------------------- NEW: Reservation Divider ------------------- */
+.ReservationDiv {
+  .ReservationDiv {
+  background-color: #ff4d4d; /* Solid red box, change color if you want */
+  color: #fff;
+  border-radius: 10px;
+  max-width: 600px;
+  margin: 30px auto 0 auto;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+.light-mode .ReservationDiv {
+  background-color: #ff6666; /* lighter red in light mode */
+  color: #fff;
+}
+}
