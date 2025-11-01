@@ -13,7 +13,7 @@ $adultGuestsQuantity = $_POST["adults"];
 $childrenGuestsQuantity = $_POST["children"];
 $message = $_POST["message"];
 $reference_number = rand(5000,9999999);
-$reservation = ["referenceNum" => $reference_number, "arrival" => $arrivalDate, "departure" => $departureDate, "rooms" => $roomQuantity, "adults" => $adultGuestsQuantity, "child" => $childrenGuestsQuantity, "message" => $message];
+$reservation = ["referenceNum" => $reference_number,"full_name" => $_SESSION['full_name'], "arrival" => $arrivalDate, "departure" => $departureDate, "rooms" => $roomQuantity, "adults" => $adultGuestsQuantity, "child" => $childrenGuestsQuantity, "message" => $message];
 $json_data = json_encode($reservation);
 
 $conn = new mysqli($servername, $username, $password, $dbname);

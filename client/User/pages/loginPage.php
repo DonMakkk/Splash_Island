@@ -20,7 +20,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
+      $row = $result->fetch_assoc();
          $_SESSION['email'] = $email;
+         $_SESSION['full_name'] = $row['full_name'];
          $_SESSION['login'] = true;
          $conn->close();
       header("Location: Bookingpage.php");
