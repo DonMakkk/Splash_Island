@@ -253,6 +253,7 @@ if ($_SESSION['email']) {
     <div class="InfoDiv mx-auto p-4 text-start mt-4 border">
       <h4 class="fw-bold text-center mb-4">Reference No: '. urlencode($value["referenceNum"]) .'</h4>
       <div class="info-text"><span class="info-label">Room Quantity:</span>'. htmlspecialchars($value["rooms"]) . '</div>
+       <div class="info-text"><span class="info-label">Departure Date:</span>'. htmlspecialchars($value["room_type"]) .'</div>
       <div class="info-text"><span class="info-label">Adults:</span>'. htmlspecialchars($value["adults"]) .'</div>
       <div class="info-text"><span class="info-label">Children:</span>' . htmlspecialchars($value["child"]) .'</div>
       <div class="info-text"><span class="info-label">Arrival Date:</span>'. htmlspecialchars($value["arrival"]) .'</div>

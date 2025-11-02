@@ -507,21 +507,7 @@ document.addEventListener("DOMContentLoaded", function() {
   
  
   
-  const calculate_date = () => {
-    const arrival_date =  new Date(arrival.value);
-    const departure_date = new Date(departure.value);
-
-    if(isNaN(arrival_date || isNaN(departure_date))){
-      console.log("Enter both date");
-      return;
-    }
-
-    const dif_time = departure_date - arrival_date;
-    const days_of_stay = dif_time / (1000 * 60 * 60 * 24);
-
-    console.log(days_of_stay);
-  }
-  departure.addEventListener("change", calculate_date);
+  
 </script>
       
   </body>
