@@ -7,7 +7,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
-
+    
     // Collect form data
     $arrivalDate = $_POST["arrival"];
     $departureDate = $_POST["departure"];
@@ -76,7 +76,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         header("refresh:1;url=signUpPage.php");
         exit();
     }
-
     $conn->close();
 }
 ?>
@@ -157,8 +156,89 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       </nav>
     </div>
    <!-- FORM AREA -->
-    <header class="p-md-5 justify-content-center d-flex bookingHeader">
-      <img src="../assets/DeluxeWarmEarthSuite.jpg" alt="" class="w-100 object-fit-cover">
+    <header class="justify-content-center d-flex bookingHeader">
+       <div id="carouselExampleCaptions" class="carousel slide h-75">
+        <div class="carousel-indicators">
+          <button
+            type="button"
+            data-bs-target="#carouselExampleCaptions"
+            data-bs-slide-to="0"
+            class="active"
+            aria-current="true"
+            aria-label="Slide 1"
+          ></button>
+          <button
+            type="button"
+            data-bs-target="#carouselExampleCaptions"
+            data-bs-slide-to="1"
+            aria-label="Slide 2"
+          ></button>
+          <button
+            type="button"
+            data-bs-target="#carouselExampleCaptions"
+            data-bs-slide-to="2"
+            aria-label="Slide 3"
+          ></button>
+        </div>
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img src="../assets/headerBg.png" class="d-block w-100" alt="..." />
+            <div class="carousel-caption">
+              <h5>Splash Resort Your Beachside Escape</h5>
+              <p>
+                Wake up to ocean views from our cozy rooms and private cottages.
+                Relax by the infinity pool, stroll the sandy shore, and book
+                your perfect stay today.
+                <a href="Bookingpage.php">Reserve now</a>
+              </p>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img
+              src="../assets/TerracedGreenOverlook.webp"
+              class="d-block w-100"
+              alt="..."
+            />
+            <div class="carousel-caption">
+              <h5>Rooms • Cottages • Pool • Beach View</h5>
+              <p>
+                Choose from seaside rooms or tucked-away cottages with stunning
+                beach vistas. Enjoy a crystal-clear pool, shoreline sunsets, and
+                easy online reservations for a hassle-free getaway.
+              </p>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img src="../assets/seaview.jpg" class="d-block w-100" alt="..." />
+            <div class="carousel-caption">
+              <h5>Book Your Beach Getaway</h5>
+              <p>
+                Rooms and cottages with pool access and breathtaking beach
+                views. Limited slots
+                <a href="Bookingpage.php">reserve your dates</a> now!
+              </p>
+            </div>
+          </div>
+        </div>
+        <button
+          class="carousel-control-prev"
+          type="button"
+          data-bs-target="#carouselExampleCaptions"
+          data-bs-slide="prev"
+        >
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden z-3">Previous</span>
+        </button>
+        <button
+          class="carousel-control-next"
+          type="button"
+          data-bs-target="#carouselExampleCaptions"
+          data-bs-slide="next"
+        >
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden z-3">Next</span>
+        </button>
+      </div>
     </header>
     <main class="p-5 d-md-flex flex-md-row d-sm-flex flex-sm-column w-100 gap-5 p-md-5">
       <div>
