@@ -223,7 +223,7 @@
               src="../assets/SignatureTropicalDesign.jpg"
               alt="Signature Tropical Design"
             />
-            <h4 class="pt-3">Deluxe Warm Earth Suite</h4>
+            <h4 class="pt-3">Exotic Haven</h4>
             <p>
               Exotic Haven Resort offers a luxurious, culturally rich
               experience. The room features a comfortable king-size bed, elegant

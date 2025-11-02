@@ -1,7 +1,7 @@
 <?php
 include "../../backend/databaseconfig.php";
 
-// DELETE Functionality
+// DELETE Functionality for inquiries
 if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
     $conn->query("DELETE FROM user_inquiries WHERE id = $id");
@@ -13,10 +13,10 @@ if (isset($_GET['delete'])) {
 $sql = "SELECT id, full_name, email, date, phone_number, message FROM user_inquiries";
 $result = $conn->query($sql);
 
-//FETCH THE RESERVATIONS DATA
+// FETCH RESERVATION DATA FROM ALL USERS
 $reservationSql = "SELECT reservation, email, full_name FROM user_account";
 $reservationResult = $conn->query($reservationSql);
-$reservationData = []; // Combine all reservations here
+$reservationData = [];
 
 if ($reservationResult->num_rows > 0) {
     while ($row = $reservationResult->fetch_assoc()) {
@@ -28,39 +28,55 @@ if ($reservationResult->num_rows > 0) {
     }
 }
 
-  if (isset($_GET['deleteReservation'])) {
+// ✅ DELETE RESERVATION AND RESTORE ROOM COUNT
+if (isset($_GET['deleteReservation'])) {
     $deleteRef = $_GET['deleteReservation'];
 
-    // Get all users
+    // Fetch all users to find which one has this reservation
     $reservationSql = "SELECT email, reservation FROM user_account";
     $reservationResult = $conn->query($reservationSql);
 
     if ($reservationResult->num_rows > 0) {
         while ($row = $reservationResult->fetch_assoc()) {
             $email = $row["email"];
-            $full_name =  $row["full_name"];
             $json_data = $row["reservation"];
             $decoded = json_decode($json_data, true);
 
             if (is_array($decoded)) {
                 $updatedData = [];
                 $found = false;
+                $room_type = "";
+                $room_qty = 0;
 
                 // Loop through each reservation
                 foreach ($decoded as $reservation) {
                     if ($reservation["referenceNum"] != $deleteRef) {
                         $updatedData[] = $reservation;
                     } else {
+                        // Found reservation to delete
                         $found = true;
+                        $room_type = $reservation["room_type"];
+                        $room_qty = (int)$reservation["rooms"];
                     }
                 }
 
-                // If a reservation was found and deleted, update the database
+                // If found, update user_account JSON
                 if ($found) {
                     $newJson = json_encode($updatedData);
                     $updateQuery = "UPDATE user_account SET reservation='$newJson' WHERE email='$email'";
                     $conn->query($updateQuery);
-                    break; // Stop after deleting the matching one
+
+                    // 🔹 Restore room availability
+                    if (!empty($room_type) && $room_qty > 0) {
+                        $room_type = $conn->real_escape_string($room_type);
+                        $conn->query("
+                            UPDATE rooms_avaialbe
+                            SET room_available = room_available + $room_qty
+                            WHERE room_name = '$room_type'
+                        ");
+                    }
+
+                    break; // stop once reservation found and updated
                 }
             }
         }
@@ -70,9 +86,14 @@ if ($reservationResult->num_rows > 0) {
     exit();
 }
 
+// FETCH ROOMS AND COTTAGE DATA
 $roomsAvaialbleSql = "SELECT * FROM rooms_avaialbe";
 $rooms_avaialble_result = $conn->query($roomsAvaialbleSql);
-// Functions (you can expand these later)
+
+$cottageAvaialbleSql = "SELECT * FROM cottage_available";
+$cottage_available_result = $conn->query($cottageAvaialbleSql);
+
+// DISPLAY FUNCTIONS
 function showInquiries($result)
 {
     if ($result->num_rows > 0) {
@@ -93,11 +114,12 @@ function showInquiries($result)
 
 function showReservation($reservationData)
 {
-     if (!empty($reservationData)) {
-        foreach($reservationData as $data) {
+    if (!empty($reservationData)) {
+        foreach ($reservationData as $data) {
             echo "<tr>";
             echo "<td>" . $data['referenceNum'] . "</td>";
             echo "<td>" . $data['full_name'] . "</td>";
+            echo "<td>" . $data['room_type'] . "</td>";
             echo "<td>" . $data['arrival'] . "</td>";
             echo "<td>" . $data['departure'] . "</td>";
             echo "<td>" . $data['rooms'] . "</td>";
@@ -112,16 +134,29 @@ function showReservation($reservationData)
     }
 }
 
-function showRoomAvailable($rooms_avaialble_result )
+function showRoomAvailable($rooms_avaialble_result)
 {
-     if (!empty($rooms_avaialble_result )) {
-        foreach($rooms_avaialble_result as $data) {
+    if (!empty($rooms_avaialble_result)) {
+        foreach ($rooms_avaialble_result as $data) {
             echo "<tr>";
-            echo "<td>" . $data['deluxe_warm_earth_suite'] . "</td>";
-            echo "<td>" . $data['primary_taupe_sanctuary'] . "</td>";
-            echo "<td>" . $data['primary_urban_quarters'] . "</td>";
-            echo "<td>" . $data['signarture_grand_king'] . "</td>";
-            echo "<td>" . $data['exotic_haven'] . "</td>";
+            echo "<td>" . $data['id'] . "</td>";
+            echo "<td>" . $data['room_name'] . "</td>";
+            echo "<td>" . $data['room_available'] . "</td>";
+            echo "</tr>";
+        }
+    } else {
+        echo "<tr><td colspan='8' class='text-center text-muted'>No Data Yet</td></tr>";
+    }
+}
+
+function showCottageAvailable($cottage_available_result)
+{
+    if (!empty($cottage_available_result)) {
+        foreach ($cottage_available_result as $data) {
+            echo "<tr>";
+              echo "<td>" . $data['id'] . "</td>";
+            echo "<td>" . $data['cottage_name'] . "</td>";
+            echo "<td>" . $data['cottage_available'] . "</td>";
             echo "</tr>";
         }
     } else {
@@ -129,6 +164,8 @@ function showRoomAvailable($rooms_avaialble_result )
     }
 }
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -166,6 +203,7 @@ function showRoomAvailable($rooms_avaialble_result )
                echo ' <tr>
               <th>Reference Number</th>
               <th>Name</th>
+              <th>Room Type</th>
               <th>Arrival Date</th>
               <th>Departure Date</th>
               <th>Rooms</th>
@@ -177,13 +215,19 @@ function showRoomAvailable($rooms_avaialble_result )
             }
             elseif (isset($_POST['roomsAvailable'])) {
                echo ' <tr>
-              <th>Deluxe Warm Earth Suite</th>
-              <th>Primary Taupe Sanctuary</th>
-              <th>Primary Urban Quarters</th>
-              <th>Signature Grand King</th>
-              <th>Deluxe Warm Earth Suite</th>
+              <th>ID</th>
+              <th>Room Name</th>
+              <th>Available Room</th>
             </tr>';
             }
+            elseif (isset($_POST['cottageAvailable'])) {
+               echo ' <tr>
+             <th>ID</th>
+              <th>Cottage Name</th>
+              <th>Available Cottage</th>
+            </tr>';
+            }
+            
             else {
                 echo ' <tr>
               <th>#</th>
@@ -203,6 +247,9 @@ function showRoomAvailable($rooms_avaialble_result )
             }
             elseif(isset($_POST['roomsAvailable'])){
               showRoomAvailable($rooms_avaialble_result);
+            }
+            elseif (isset($_POST['cottageAvailable'])) {
+              showCottageAvailable($cottage_available_result);
             }
             else {
                 showInquiries($result);

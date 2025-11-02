@@ -1,56 +1,86 @@
 <?php
 session_start();
-if($_SERVER["REQUEST_METHOD"] == "POST"){
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "splash_island_data";
 
-$arrivalDate = $_POST["arrival"];
-$departureDate = $_POST["departure"];
-$roomQuantity = $_POST["room"];
-$adultGuestsQuantity = $_POST["adults"];
-$childrenGuestsQuantity = $_POST["children"];
-$message = $_POST["message"];
-$reference_number = rand(5000,9999999);
-$reservation = ["referenceNum" => $reference_number,"full_name" => $_SESSION['full_name'], "arrival" => $arrivalDate, "departure" => $departureDate, "rooms" => $roomQuantity, "adults" => $adultGuestsQuantity, "child" => $childrenGuestsQuantity, "message" => $message];
-$json_data = json_encode($reservation);
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $conn = new mysqli("localhost", "root", "", "splash_island_data");
 
-$conn = new mysqli($servername, $username, $password, $dbname);
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
- $email =  $_SESSION["email"];
-if($_SESSION['login']){
-  $result = $conn->query("SELECT reservation FROM user_account where email = '$email'");
-  $row = $result->fetch_assoc();
+    // Collect form data
+    $arrivalDate = $_POST["arrival"];
+    $departureDate = $_POST["departure"];
+    $roomQuantity = $_POST["room"];
+    $adultGuestsQuantity = $_POST["adults"];
+    $childrenGuestsQuantity = $_POST["children"];
+    $message = $_POST["message"];
+    $room_type = $_POST["room_type"]; // this must match the room_name in your DB
+    $reference_number = rand(5000, 9999999);
 
-  if($row['reservation'] == null){
-    $cart = [];
-  }else{
-    $cart = json_decode($row['reservation'], true);
-  }
-  $cart[] = $reservation;
-  $update_cart = json_encode($cart);
-  $stmt = $conn->prepare("UPDATE user_account SET reservation = ? WHERE email = ?");
-  $stmt->bind_param("ss",$update_cart,$email);
-  $stmt->execute();
-  echo "save in database";
-    header("Location: Bookingpage.php");
-    exit();
-}else{
-    echo "not save in database";
-    header("Location: signUpPage.php");
-    exit();
-}
+    // Create JSON data for reservation
+    $reservation = [
+        "referenceNum" => $reference_number,
+        "full_name" => $_SESSION['full_name'],
+        "room_type" => $room_type,
+        "arrival" => $arrivalDate,
+        "departure" => $departureDate,
+        "rooms" => $roomQuantity,
+        "adults" => $adultGuestsQuantity,
+        "child" => $childrenGuestsQuantity,
+        "message" => $message
+    ];
+    $json_data = json_encode($reservation);
 
+    $email = $_SESSION["email"];
 
+    //Proceed only if logged in
+    if ($_SESSION['login']) {
+        // Get existing reservations of this user
+        $result = $conn->query("SELECT reservation FROM user_account WHERE email = '$email'");
+        $row = $result->fetch_assoc();
+        $cart = $row['reservation'] ? json_decode($row['reservation'], true) : [];
 
-$conn->close();
+        $cart[] = $reservation;
+        $update_cart = json_encode($cart);
+
+        
+        $stmt = $conn->prepare("UPDATE user_account SET reservation = ? WHERE email = ?");
+        $stmt->bind_param("ss", $update_cart, $email);
+        $stmt->execute();
+
+        
+        $room_name = $conn->real_escape_string($room_type);
+
+        // Check current available count
+        $check = $conn->query("SELECT room_available FROM rooms_avaialbe WHERE room_name = '$room_name'");
+        $data = $check->fetch_assoc();
+
+        if ($data && $data['room_available'] >= $roomQuantity) {
+            // Decrease the count
+            $update = $conn->query("UPDATE rooms_avaialbe 
+                                    SET room_available = room_available - $roomQuantity 
+                                    WHERE room_name = '$room_name'");
+        } else {
+            echo "<script>alert('Sorry, $room_name is fully booked or not enough rooms left!');</script>";
+            header("refresh:1;url=Bookingpage.php");
+            exit();
+        }
+
+        echo "<script>alert('Room successfully reserved!');</script>";
+        header("refresh:1;url=Bookingpage.php");
+        exit();
+
+    } else {
+        echo "<script>alert('Please log in first!');</script>";
+        header("refresh:1;url=signUpPage.php");
+        exit();
+    }
+
+    $conn->close();
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -154,6 +184,17 @@ $conn->close();
          <h4>Plan your Visit</h4>
       
         <!-- DATE -->
+         <div class="w-100">
+  <label for="roomType" class="form-label fw-light">Select Room Type</label>
+  <select class="form-select border-1 border-secondary" id="roomType" name="room_type">
+    <option value="deluxe_warm_earth_suite">Deluxe Warm Earth Suite</option>
+    <option value="primary_taupe_sanctuary	">Primary Taupe Sanctuary</option>
+    <option value="primary_urban_quarters">Primary Urban Quarters</option>
+    <option value="signarture_grand_king">Signature Grand King</option>
+    <option value="exotic_haven">Exotic Haven </option>
+  </select>
+</div>
+
         <div class="d-flex flex-row gap-2 pe-2">
           <div class="w-50">
             <label for="">Date of Arrival</label>
@@ -170,38 +211,49 @@ $conn->close();
     Rooms
   </button>
   <ul class="dropdown-menu w-100 p-3" aria-labelledby="dropdownMenuButton2" id="reservationContainer">
-   <div class="d-flex flex-column gap-2">   <!--  Main room wanted to add -->
-    <h6 class="dropdown-item  fw-light">Max. 6 gusets per room</h6>
+  <div class="d-flex flex-column gap-2">
+    <h6 class="dropdown-item fw-light">Max. 6 guests per room</h6>
+
+    <!-- ROOM -->
     <div class="d-flex flex-row gap-2 ps-3 pe-2">
       <h6 class="fw-light pt-2">Room(s)</h6>
-      <div class="d-flex flex-row justify-content-between ms-auto input-group w-50"> <button class="btn btn-outline-secondary" type="button" id="minus-button">-</button>
-      <input type="number" class="form-control text-center" value="1" min="1" id="quantity-input" name="room">
-      <button class="btn btn-outline-secondary" type="button" id="plus-button">+</button>
+      <div class="d-flex flex-row justify-content-between ms-auto input-group w-50">
+        <button class="btn btn-outline-secondary" type="button" id="room-minus">-</button>
+        <input type="number" class="form-control text-center" value="1" min="1" id="room-input" name="room">
+        <button class="btn btn-outline-secondary" type="button" id="room-plus">+</button>
+      </div>
     </div>
-   </div>
-   <div class="d-flex flex-row gap-2 ps-3 pe-2">
-      <h6 class="fw-light pt-2 ">Adult(s)</h6>
-      <div class="d-flex flex-row justify-content-between ms-auto input-group w-50"> <button class="btn btn-outline-secondary" type="button" id="minus-button">-</button>
-      <input type="number" class="form-control text-center" value="1" min="1" id="quantity-input" name="adults">
-      <button class="btn btn-outline-secondary" type="button" id="plus-button">+</button>
+
+    <!-- ADULT -->
+    <div class="d-flex flex-row gap-2 ps-3 pe-2">
+      <h6 class="fw-light pt-2">Adult(s)</h6>
+      <div class="d-flex flex-row justify-content-between ms-auto input-group w-50">
+        <button class="btn btn-outline-secondary" type="button" id="adult-minus">-</button>
+        <input type="number" class="form-control text-center" value="1" min="1" id="adult-input" name="adults">
+        <button class="btn btn-outline-secondary" type="button" id="adult-plus">+</button>
+      </div>
     </div>
-</div>
-   <div class="d-flex flex-row gap-2 ps-3 pe-2">
-      <h6 class="fw-light pt-2 ">Children (under 12)</h6>
-      <div class="d-flex flex-row justify-content-between ms-auto input-group w-50"> <button class="btn btn-outline-secondary" type="button" id="minus-button">-</button>
-      <input type="number" class="form-control text-center" value="1" min="1" id="quantity-input" name="children">
-      <button class="btn btn-outline-secondary" type="button" id="plus-button">+</button>
+
+    <!-- CHILD -->
+    <div class="d-flex flex-row gap-2 ps-3 pe-2">
+      <h6 class="fw-light pt-2">Children (under 12)</h6>
+      <div class="d-flex flex-row justify-content-between ms-auto input-group w-50">
+        <button class="btn btn-outline-secondary" type="button" id="child-minus">-</button>
+        <input type="number" class="form-control text-center" value="1" min="1" id="child-input" name="children">
+        <button class="btn btn-outline-secondary" type="button" id="child-plus">+</button>
+      </div>
     </div>
-</div>
+
     <li><hr class="dropdown-divider"></li>
-   <textarea
-            name="message"
-            id="messagearea"
-            style="resize: none"
-            placeholder="Your Message"
-            class="p-1 h-50 text-black"
-          ></textarea>
-  </ul>
+    <textarea
+      name="message"
+      id="messagearea"
+      style="resize: none"
+      placeholder="Your Message"
+      class="p-1 h-50 text-black"
+    ></textarea>
+  </div>
+</ul>
 </div>
 <input type="submit" value="Book now" class="form-control h-50 " >
     </form>
@@ -317,6 +369,49 @@ $conn->close();
       crossorigin="anonymous"
     ></script>
     <script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Prevent dropdown from closing when clicking inside it
+  const dropdownMenu = document.querySelector('.dropdown-menu');
+  dropdownMenu.addEventListener('click', function(event) {
+    event.stopPropagation();
+  });
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+  function setupCounter(minusBtn, input, plusBtn, minValue = 1) {
+    minusBtn.addEventListener("click", function() {
+      let current = parseInt(input.value) || 0;
+      if (current > minValue) input.value = current - 1;
+    });
+
+    plusBtn.addEventListener("click", function() {
+      let current = parseInt(input.value) || 0;
+      input.value = current + 1;
+    });
+  }
+
+  // ROOM
+  const roomMinus = document.querySelector('#room-minus');
+  const roomInput = document.querySelector('#room-input');
+  const roomPlus = document.querySelector('#room-plus');
+
+  // ADULT
+  const adultMinus = document.querySelector('#adult-minus');
+  const adultInput = document.querySelector('#adult-input');
+  const adultPlus = document.querySelector('#adult-plus');
+
+  // CHILD
+  const childMinus = document.querySelector('#child-minus');
+  const childInput = document.querySelector('#child-input');
+  const childPlus = document.querySelector('#child-plus');
+
+  // Initialize
+  setupCounter(roomMinus, roomInput, roomPlus, 1);
+  setupCounter(adultMinus, adultInput, adultPlus, 1);
+  setupCounter(childMinus, childInput, childPlus, 0);
+});
+
+
   const arrival = document.getElementById("arrival");
   const departure = document.getElementById("departure");
 
