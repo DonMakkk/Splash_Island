@@ -139,55 +139,75 @@ function showInquiries($result)
 function showReservationForRoom($reservationData)
 {
     if (!empty($reservationData)) {
+        $hasData = false;
         foreach ($reservationData as $data) {
-          if($data['room_type'] == 'deluxe_warm_earth_suite' || $data['room_type'] == 'primary_taupe_sanctuary' || $data['room_type'] == 'primary_urban_quarters' || $data['room_type'] == 'signature_grand_king' || $data['room_type'] == 'exotic_haven'){
-            echo "<tr>";
-            echo "<td>" . $data['referenceNum'] . "</td>";
-            echo "<td>" . $data['full_name'] . "</td>";
-            echo "<td>" . $data['room_type'] . "</td>";
-            echo "<td>" . $data['arrival'] . "</td>";
-            echo "<td>" . $data['departure'] . "</td>";
-            echo "<td>" . $data['days_of_stay'] . "</td>";
-            echo "<td>" . $data['rooms'] . "</td>";
-            echo "<td>" . $data['adults'] . "</td>";
-            echo "<td>" . $data['child'] . "</td>";
-            echo "<td>" . $data['price'] . "</td>";
-            echo "<td>" . $data['message'] . "</td>";
-            echo "<td><a href='?deleteReservation=" . $data["referenceNum"] . "' class='btn btn-sm btn-danger'>Delete</a></td>";
-            echo "</tr>";
+            if (isset($data['room_type']) && in_array($data['room_type'], [
+                'deluxe_warm_earth_suite',
+                'primary_taupe_sanctuary',
+                'primary_urban_quarters',
+                'signature_grand_king',
+                'exotic_haven'
+            ])) {
+                $hasData = true;
+                echo "<tr>";
+                echo "<td>" . htmlspecialchars($data['referenceNum']) . "</td>";
+                echo "<td>" . htmlspecialchars($data['full_name']) . "</td>";
+                echo "<td>" . htmlspecialchars($data['room_type']) . "</td>";
+                echo "<td>" . htmlspecialchars($data['arrival']) . "</td>";
+                echo "<td>" . htmlspecialchars($data['departure']) . "</td>";
+                echo "<td>" . htmlspecialchars($data['days_of_stay']) . "</td>";
+                echo "<td>" . htmlspecialchars($data['rooms']) . "</td>";
+                echo "<td>" . htmlspecialchars($data['adults']) . "</td>";
+                echo "<td>" . htmlspecialchars($data['child']) . "</td>";
+                echo "<td>" . htmlspecialchars($data['price']) . "</td>";
+                echo "<td>" . htmlspecialchars($data['message']) . "</td>";
+                echo "<td><a href='?deleteReservation=" . urlencode($data["referenceNum"]) . "' class='btn btn-sm btn-danger'>Delete</a></td>";
+                echo "</tr>";
+            }
         }
-      }
+        if (!$hasData) {
+            echo "<tr><td colspan='12' class='text-center text-muted'>No Room Reservations Yet</td></tr>";
+        }
     } else {
-        echo "<tr><td colspan='8' class='text-center text-muted'>No Data Yet</td></tr>";
+        echo "<tr><td colspan='12' class='text-center text-muted'>No Data Yet</td></tr>";
     }
 }
+
 
 //Cottage reservation
 function showReservationForCottage($reservationData)
 {
     if (!empty($reservationData)) {
+        $hasData = false;
         foreach ($reservationData as $data) {
-          if($data['cottage_type'] == 'bamboo_beach_villa' || $data['cottage_type'] == 'canopy_lagoon_suite' || $data['cottage_type'] == 'deluxe_ocean_view' || $data['cottage_type'] == 'oceanfront_overwater'){
-            echo "<tr>";
-            echo "<td>" . $data['referenceNum'] . "</td>";
-            echo "<td>" . $data['full_name'] . "</td>";
-            echo "<td>" . $data['cottage_type'] . "</td>";
-            echo "<td>" . $data['cottage_arrivalDate'] . "</td>";
-            echo "<td>" . $data['cottage_departureDate'] . "</td>";
-            echo "<td>" . $data['days_of_stay'] . "</td>";
-            echo "<td>" . $data['cottage'] . "</td>";
-            echo "<td>" . $data['adults'] . "</td>";
-            echo "<td>" . $data['child'] . "</td>";
-            echo "<td>" . $data['price'] . "</td>";
-            echo "<td>" . $data['message'] . "</td>";
-            echo "<td><a href='?deleteReservation=" . $data["referenceNum"] . "' class='btn btn-sm btn-danger'>Delete</a></td>";
-            echo "</tr>";
-        }else {
-        echo "<tr><td colspan='8' class='text-center text-muted'>No Data Yet</td></tr>";
-    }
-      }
+            if (isset($data['cottage_type']) && in_array($data['cottage_type'], [
+                'bamboo_beach_villa',
+                'canopy_lagoon_suite',
+                'deluxe_ocean_view',
+                'oceanfront_overwater'
+            ])) {
+                $hasData = true;
+                echo "<tr>";
+                echo "<td>" . htmlspecialchars($data['referenceNum']) . "</td>";
+                echo "<td>" . htmlspecialchars($data['full_name']) . "</td>";
+                echo "<td>" . htmlspecialchars($data['cottage_type']) . "</td>";
+                echo "<td>" . htmlspecialchars($data['cottage_arrivalDate']) . "</td>";
+                echo "<td>" . htmlspecialchars($data['cottage_departureDate']) . "</td>";
+                echo "<td>" . htmlspecialchars($data['days_of_stay']) . "</td>";
+                echo "<td>" . htmlspecialchars($data['cottage']) . "</td>";
+                echo "<td>" . htmlspecialchars($data['adults'] ?? $data['cottage_adults'] ?? 'N/A') . "</td>";
+                echo "<td>" . htmlspecialchars($data['child'] ?? $data['cottage_children'] ?? 'N/A') . "</td>";
+                echo "<td>" . htmlspecialchars($data['price']) . "</td>";
+                echo "<td>" . htmlspecialchars($data['message']) . "</td>";
+                echo "<td><a href='?deleteReservation=" . urlencode($data["referenceNum"]) . "' class='btn btn-sm btn-danger'>Delete</a></td>";
+                echo "</tr>";
+            }
+        }
+        if (!$hasData) {
+            echo "<tr><td colspan='12' class='text-center text-muted'>No Cottage Reservations Yet</td></tr>";
+        }
     } else {
-        echo "<tr><td colspan='8' class='text-center text-muted'>No Data Yet</td></tr>";
+        echo "<tr><td colspan='12' class='text-center text-muted'>No Data Yet</td></tr>";
     }
 }
 
