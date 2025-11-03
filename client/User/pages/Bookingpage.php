@@ -454,6 +454,108 @@ $conn->close();
 </div>
 <input type="submit" value="Book now" name="room_submit" class="form-control h-50 " >
     </form>
+    </main>
+    <!-- cottage -->
+     <header class="justify-content-center d-flex bookingHeader">
+       <div id="carouselExampleCaptions" class="carousel slide h-75">
+        <div class="carousel-indicators">
+          <button
+            type="button"
+            data-bs-target="#carouselExampleCaptions"
+            data-bs-slide-to="0"
+            class="active"
+            aria-current="true"
+            aria-label="Slide 1"
+          ></button>
+          <button
+            type="button"
+            data-bs-target="#carouselExampleCaptions"
+            data-bs-slide-to="1"
+            aria-label="Slide 2"
+          ></button>
+          <button
+            type="button"
+            data-bs-target="#carouselExampleCaptions"
+            data-bs-slide-to="2"
+            aria-label="Slide 3"
+          ></button>
+        </div>
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img src="../assets/headerBg.png" class="d-block w-100" alt="..." />
+            <div class="carousel-caption">
+              <h5>Splash Resort Your Beachside Escape</h5>
+              <p>
+                Wake up to ocean views from our cozy rooms and private cottages.
+                Relax by the infinity pool, stroll the sandy shore, and book
+                your perfect stay today.
+                <a href="Bookingpage.php">Reserve now</a>
+              </p>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img
+              src="../assets/TerracedGreenOverlook.webp"
+              class="d-block w-100"
+              alt="..."
+            />
+            <div class="carousel-caption">
+              <h5>Rooms • Cottages • Pool • Beach View</h5>
+              <p>
+                Choose from seaside rooms or tucked-away cottages with stunning
+                beach vistas. Enjoy a crystal-clear pool, shoreline sunsets, and
+                easy online reservations for a hassle-free getaway.
+              </p>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img src="../assets/seaview.jpg" class="d-block w-100" alt="..." />
+            <div class="carousel-caption">
+              <h5>Book Your Beach Getaway</h5>
+              <p>
+                Rooms and cottages with pool access and breathtaking beach
+                views. Limited slots
+                <a href="Bookingpage.php">reserve your dates</a> now!
+              </p>
+            </div>
+          </div>
+        </div>
+        <button
+          class="carousel-control-prev"
+          type="button"
+          data-bs-target="#carouselExampleCaptions"
+          data-bs-slide="prev"
+        >
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden z-3">Previous</span>
+        </button>
+        <button
+          class="carousel-control-next"
+          type="button"
+          data-bs-target="#carouselExampleCaptions"
+          data-bs-slide="next"
+        >
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden z-3">Next</span>
+        </button>
+      </div>
+    </header>
+    <main class="p-5 d-md-flex flex-md-row d-sm-flex flex-sm-column w-100 gap-5 p-md-5">
+      <div>
+        <h1>Deluxe Warm Earth Suite</h1>
+        <p>Escape the everyday and embrace tranquility in our Deluxe Warm Earth Suite. Unwind with the soothing ambiance of your well-appointed room, featuring a plush king-size bed perfect for restful nights. Enjoy a complimentary selection of herbal teas, designed to enhance your relaxation. From this peaceful retreat to a refreshing start to your day, let Splash Island's Deluxe Warm Earth Suite be your sanctuary.</p>
+        <b>This offer includes:</b>
+        <ul>
+          <li>Daily breakfast (adult persons subject to booking).</li>
+          <li>Stay in our Deluxe Warm Earth Suite.</li>
+          <li>Complimentary access to our Relaxation Lounge, including a selection of herbal teas.</li>
+          <li>Complimentary access to our Fitness Center and outdoor swimming pool.</li>
+          <li>Complimentary parking (one vehicle per room, per night).</li>
+          <li>In compliance with environmental regulations, from January 1, 2025, Splash Island will no longer provide disposable personal amenities in guest rooms. We recommend bringing your own toiletries. Thank you for your understanding.</li>
+        </ul>
+        <p>Booking opens on September 25 at 12:00 noon. Limited availability—reserve early!</p>
+        <p>Reservation hotline: (02) 2376-3266</p>
+      </div>
     <form action="Bookingpage.php" method="post" class="d-flex flex-column gap-3 p-4 border text-center bookingPageForm justify-content-between ms-auto h-75">
   <h5>Book a Cottage</h5>
   <p>Rates from <b>PHP 5,999</b> per night</p>

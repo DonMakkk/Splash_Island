@@ -215,7 +215,7 @@ if ($dataResult->num_rows > 0 && !empty($data)) {
           <h4 class="fw-bold text-center mb-4">Reference No: ' . htmlspecialchars($value["referenceNum"] ?? $value["cottage_reference_number"]) . '</h4>
 
           <div class="info-text"><span class="info-label">Quantity:</span> ' 
-          . htmlspecialchars($value["room"] ?? $value["cottage_room"] ?? "N/A") . '</div>
+          . htmlspecialchars($value["rooms"] ?? $value["cottage"] ?? "N/A") . '</div>
 
           <div class="info-text"><span class="info-label">Type:</span> ' 
           . htmlspecialchars(str_replace("_", " ", $value["room_type"] ?? $value["cottage_type"] ?? "N/A")) . '</div>
