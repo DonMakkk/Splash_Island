@@ -102,88 +102,15 @@ if ($_SESSION['email']) {
   <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
   <link rel="stylesheet" href="Profilepage.css" />
-  <style>
-    /* Modal Styles */
-    .modal-content {
-      background: #2a2d31;
-      color: #fff;
-      border: 1px solid #444;
-      border-radius: 10px;
-    }
-    
-    .light-mode .modal-content {
-      background: #fff;
-      color: #000;
-      border-color: #ddd;
-    }
-    
-    .modal-header {
-      border-bottom: 1px solid #444;
-    }
-    
-    .light-mode .modal-header {
-      border-bottom-color: #ddd;
-    }
-    
-    .modal-footer {
-      border-top: 1px solid #444;
-    }
-    
-    .light-mode .modal-footer {
-      border-top-color: #ddd;
-    }
-    
-    .modal-body .form-control {
-      background: #212428;
-      border: 1px solid #333;
-      color: #fff;
-      border-radius: 5px;
-    }
-    
-    .modal-body .form-control:focus {
-      background: #212428;
-      border-color: #555;
-      color: #fff;
-      box-shadow: 0 0 0 0.2rem rgba(255, 77, 77, 0.25);
-    }
-    
-    .light-mode .modal-body .form-control {
-      background: #f2f2f2;
-      border-color: #ccc;
-      color: #000;
-    }
-    
-    .light-mode .modal-body .form-control:focus {
-      background: #f2f2f2;
-      border-color: #999;
-      color: #000;
-      box-shadow: 0 0 0 0.2rem rgba(255, 77, 77, 0.25);
-    }
-    
-    .modal-body .form-label {
-      color: #fff;
-    }
-    
-    .light-mode .modal-body .form-label {
-      color: #000;
-    }
-    
-    .btn-close {
-      filter: invert(1);
-    }
-    
-    .light-mode .btn-close {
-      filter: invert(0);
-    }
-  </style>
+
 </head>
 
 <body>
   <div class="container-fluid navDiv p-2">
     <nav class="navbar navbar-expand-lg d-flex justify-content-between align-items-center">
-      <a href="Homepage.php" class="d-flex align-items-center text-decoration-none">
-        <img src="../assets/logo.png" height="45" />
-        <h4 class="ms-2 fw-light mb-0 title-text">Splash Island</h4>
+      <a href="Homepage.php" class="navbar-brand overflow-hidden d-flex">
+        <img src="../assets/logo.png" height="50" />
+        <h4 class="ms-2 fw-light mb-0 title-text">Splash Resort</h4>
       </a>
 
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu">

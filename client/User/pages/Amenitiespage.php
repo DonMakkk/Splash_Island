@@ -102,7 +102,7 @@
           <div class="carousel-item active">
             <img src="../assets/headerBg.png" class="d-block w-100" alt="..." />
             <div class="carousel-caption">
-              <h5>Splash Island Resort Your Beachside Escape</h5>
+              <h5>Splash Resort Your Beachside Escape</h5>
               <p>
                 Wake up to ocean views from our cozy rooms and private cottages.
                 Relax by the infinity pool, stroll the sandy shore, and book
@@ -113,7 +113,7 @@
           </div>
           <div class="carousel-item">
             <img
-              src="../assets/Terraced Green Overlook.webp"
+              src="../assets/TerracedGreenOverlook.webp"
               class="d-block w-100"
               alt="..."
             />

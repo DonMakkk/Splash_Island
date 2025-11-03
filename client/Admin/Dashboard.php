@@ -112,10 +112,35 @@ function showInquiries($result)
     }
 }
 
-function showReservation($reservationData)
+// function showReservation($reservationData)
+// {
+//     if (!empty($reservationData)) {
+//         foreach ($reservationData as $data) {
+//             echo "<tr>";
+//             echo "<td>" . $data['referenceNum'] . "</td>";
+//             echo "<td>" . $data['full_name'] . "</td>";
+//             echo "<td>" . $data['room_type'] . "</td>";
+//             echo "<td>" . $data['arrival'] . "</td>";
+//             echo "<td>" . $data['departure'] . "</td>";
+//             echo "<td>" . $data['days_of_stay'] . "</td>";
+//             echo "<td>" . $data['rooms'] . "</td>";
+//             echo "<td>" . $data['adults'] . "</td>";
+//             echo "<td>" . $data['child'] . "</td>";
+//             echo "<td>" . $data['price'] . "</td>";
+//             echo "<td>" . $data['message'] . "</td>";
+//             echo "<td><a href='?deleteReservation=" . $data["referenceNum"] . "' class='btn btn-sm btn-danger'>Delete</a></td>";
+//             echo "</tr>";
+//         }
+//     } else {
+//         echo "<tr><td colspan='8' class='text-center text-muted'>No Data Yet</td></tr>";
+//     }
+// }
+
+function showReservationForRoom($reservationData)
 {
     if (!empty($reservationData)) {
         foreach ($reservationData as $data) {
+          if($data['room_type'] == 'deluxe_warm_earth_suite' || $data['room_type'] == 'primary_taupe_sanctuary' || $data['room_type'] == 'primary_urban_quarters' || $data['room_type'] == 'signature_grand_king' || $data['room_type'] == 'exotic_haven'){
             echo "<tr>";
             echo "<td>" . $data['referenceNum'] . "</td>";
             echo "<td>" . $data['full_name'] . "</td>";
@@ -131,10 +156,41 @@ function showReservation($reservationData)
             echo "<td><a href='?deleteReservation=" . $data["referenceNum"] . "' class='btn btn-sm btn-danger'>Delete</a></td>";
             echo "</tr>";
         }
+      }
     } else {
         echo "<tr><td colspan='8' class='text-center text-muted'>No Data Yet</td></tr>";
     }
 }
+
+//Cottage reservation
+function showReservationForCottage($reservationData)
+{
+    if (!empty($reservationData)) {
+        foreach ($reservationData as $data) {
+          if($data['room_type'] == 'Bamboo_Beach_Villa' || $data['room_type'] == 'Canopy_Lagoon_Suite' || $data['room_type'] == 'Deluxe_Ocean_View' || $data['room_type'] == 'Oceanfront_Overwater'){
+            echo "<tr>";
+            echo "<td>" . $data['referenceNum'] . "</td>";
+            echo "<td>" . $data['full_name'] . "</td>";
+            echo "<td>" . $data['room_type'] . "</td>";
+            echo "<td>" . $data['arrival'] . "</td>";
+            echo "<td>" . $data['departure'] . "</td>";
+            echo "<td>" . $data['days_of_stay'] . "</td>";
+            echo "<td>" . $data['rooms'] . "</td>";
+            echo "<td>" . $data['adults'] . "</td>";
+            echo "<td>" . $data['child'] . "</td>";
+            echo "<td>" . $data['price'] . "</td>";
+            echo "<td>" . $data['message'] . "</td>";
+            echo "<td><a href='?deleteReservation=" . $data["referenceNum"] . "' class='btn btn-sm btn-danger'>Delete</a></td>";
+            echo "</tr>";
+        }else {
+        echo "<tr><td colspan='8' class='text-center text-muted'>No Data Yet</td></tr>";
+    }
+      }
+    } else {
+        echo "<tr><td colspan='8' class='text-center text-muted'>No Data Yet</td></tr>";
+    }
+}
+
 
 function showRoomAvailable($rooms_avaialble_result)
 {
@@ -190,7 +246,8 @@ function showCottageAvailable($cottage_available_result)
         <h4 class="mb-4">Dashboard</h4>
         <form method="post">
           <button type="submit" name="inquiries" class="btn btn-outline-light mb-2 w-100 text-start">Inquiries</button>
-          <button type="submit" name="reservations" class="btn btn-outline-light mb-2 w-100 text-start">Reservations</button>
+          <button type="submit" name="reservations" class="btn btn-outline-light mb-2 w-100 text-start">Room Reservations</button>
+           <button type="submit" name="cottage_reservations" class="btn btn-outline-light mb-2 w-100 text-start">Cottage Reservations</button>
           <button type="submit" name="roomsAvailable" class="btn btn-outline-light mb-2 w-100 text-start">Room Available</button>
           <button type="submit" name="cottageAvailable" class="btn btn-outline-light mb-2 w-100 text-start">Cottage Available</button>
         </form>
@@ -206,6 +263,22 @@ function showCottageAvailable($cottage_available_result)
               <th>Reference Number</th>
               <th>Name</th>
               <th>Room Type</th>
+              <th>Arrival Date</th>
+              <th>Departure Date</th>
+               <th>Total Days of Stay</th>
+              <th>Rooms</th>
+              <th>Adults</th>
+              <th>Child</th>
+              <th>Price</th>
+              <th>Message</th>
+              <th>Action</th>
+            </tr>';
+            }
+            elseif (isset($_POST['cottage_reservations'])){
+             echo ' <tr>
+              <th>Reference Number</th>
+              <th>Name</th>
+              <th>Cottage Type</th>
               <th>Arrival Date</th>
               <th>Departure Date</th>
                <th>Total Days of Stay</th>
@@ -247,13 +320,16 @@ function showCottageAvailable($cottage_available_result)
           <tbody>
             <?php
             if (isset($_POST['reservations'])) {
-                showReservation($reservationData);
+               showReservationForRoom($reservationData);
             }
             elseif(isset($_POST['roomsAvailable'])){
               showRoomAvailable($rooms_avaialble_result);
             }
             elseif (isset($_POST['cottageAvailable'])) {
               showCottageAvailable($cottage_available_result);
+            }
+            elseif (isset($_POST['cottage_reservations'])){
+             showReservationForCottage($reservationData);
             }
             else {
                 showInquiries($result);
