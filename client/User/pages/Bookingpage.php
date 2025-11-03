@@ -15,8 +15,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $adultGuestsQuantity = $_POST["adults"];
     $childrenGuestsQuantity = $_POST["children"];
     $message = $_POST["message"];
-    $room_type = $_POST["room_type"]; // this must match the room_name in your DB
+    $room_type = trim($_POST["room_type"]); // FIXED: trim to remove hidden spaces/tabs
     $reference_number = rand(5000, 9999999);
+    $total_price = 2;
+    $start = new DateTime($arrivalDate);
+    $end = new DateTime($departureDate);
+    $interval = $start->diff($end);
+    $total_days = $interval->days;
+
+    //PRICE UPDATE
+    if($room_type == "deluxe_warm_earth_suite"){
+       $total_price = (2000 *  $roomQuantity) * $total_days;
+    }
+    elseif($room_type == "primary_taupe_sanctuary"){
+       $total_price = (3000 *  $roomQuantity) * $total_days;
+    }
+    elseif($room_type == "primary_urban_quarters"){
+       $total_price = (4000 *  $roomQuantity) * $total_days;
+    }
+    elseif($room_type == "signature_grand_king"){
+       $total_price = (5000 *  $roomQuantity) * $total_days;
+    }
+    elseif($room_type == "exotic_haven"){
+       $total_price = (6000 *  $roomQuantity) * $total_days;
+    } else {
+       $total_price = 1;
+    }
 
     // Create JSON data for reservation
     $reservation = [
@@ -28,7 +52,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         "rooms" => $roomQuantity,
         "adults" => $adultGuestsQuantity,
         "child" => $childrenGuestsQuantity,
-        "message" => $message
+        "message" => $message,
+        "price" => $total_price,
+        "days_of_stay" =>  $total_days
     ];
     $json_data = json_encode($reservation);
 
@@ -44,21 +70,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $cart[] = $reservation;
         $update_cart = json_encode($cart);
 
-        
         $stmt = $conn->prepare("UPDATE user_account SET reservation = ? WHERE email = ?");
         $stmt->bind_param("ss", $update_cart, $email);
         $stmt->execute();
 
-        
         $room_name = $conn->real_escape_string($room_type);
 
         // Check current available count
-        $check = $conn->query("SELECT room_available FROM rooms_avaialbe WHERE room_name = '$room_name'");
+        $check = $conn->query("SELECT room_available FROM rooms_available WHERE room_name = '$room_name'");
         $data = $check->fetch_assoc();
 
         if ($data && $data['room_available'] >= $roomQuantity) {
             // Decrease the count
-            $update = $conn->query("UPDATE rooms_avaialbe 
+            $update = $conn->query("UPDATE rooms_available 
                                     SET room_available = room_available - $roomQuantity 
                                     WHERE room_name = '$room_name'");
         } else {

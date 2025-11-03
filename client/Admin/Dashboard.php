@@ -70,7 +70,7 @@ if (isset($_GET['deleteReservation'])) {
                     if (!empty($room_type) && $room_qty > 0) {
                         $room_type = $conn->real_escape_string($room_type);
                         $conn->query("
-                            UPDATE rooms_avaialbe
+                            UPDATE rooms_available
                             SET room_available = room_available + $room_qty
                             WHERE room_name = '$room_type'
                         ");
@@ -87,7 +87,7 @@ if (isset($_GET['deleteReservation'])) {
 }
 
 // FETCH ROOMS AND COTTAGE DATA
-$roomsAvaialbleSql = "SELECT * FROM rooms_avaialbe";
+$roomsAvaialbleSql = "SELECT * FROM rooms_available";
 $rooms_avaialble_result = $conn->query($roomsAvaialbleSql);
 
 $cottageAvaialbleSql = "SELECT * FROM cottage_available";
@@ -122,9 +122,11 @@ function showReservation($reservationData)
             echo "<td>" . $data['room_type'] . "</td>";
             echo "<td>" . $data['arrival'] . "</td>";
             echo "<td>" . $data['departure'] . "</td>";
+            echo "<td>" . $data['days_of_stay'] . "</td>";
             echo "<td>" . $data['rooms'] . "</td>";
             echo "<td>" . $data['adults'] . "</td>";
             echo "<td>" . $data['child'] . "</td>";
+            echo "<td>" . $data['price'] . "</td>";
             echo "<td>" . $data['message'] . "</td>";
             echo "<td><a href='?deleteReservation=" . $data["referenceNum"] . "' class='btn btn-sm btn-danger'>Delete</a></td>";
             echo "</tr>";
@@ -206,9 +208,11 @@ function showCottageAvailable($cottage_available_result)
               <th>Room Type</th>
               <th>Arrival Date</th>
               <th>Departure Date</th>
+               <th>Total Days of Stay</th>
               <th>Rooms</th>
               <th>Adults</th>
               <th>Child</th>
+              <th>Price</th>
               <th>Message</th>
               <th>Action</th>
             </tr>';
