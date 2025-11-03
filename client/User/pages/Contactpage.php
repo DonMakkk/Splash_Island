@@ -77,11 +77,15 @@
       <div class=" w-100">
       <h1 class="text-center mt-md-5">GET IN TOUCH</h1>
       <p class="text-center">Have questions? We'd love to hear from you!</p>
-      <div class="d-flex gap-3 justify-content-center align-content-center text-center w-100">
-        <a href="https://www.facebook.com/marco.bunao.31"><img src="../assets/facebook.png" alt="" class="contactLogo"></a>
-        <img src="../assets/Instagram.png" alt="" class="contactLogo">
-        <img src="../assets/tiktok.png" alt="" class="contactLogo">
-      </div>
+    <div class="d-flex justify-content-center align-content-center text-center w-100">
+  <ul class="d-flex flex-column text-start list-unstyled ps-0 gap-3 fs-5 ms-5">
+    <li><b><ion-icon name="location" class="pt-2"></ion-icon>&nbsp Address: &nbsp</b>938 Aurora Boulevard, Cubao, Quezon City, Metro Manila, Philippines</li>
+    <li><b><ion-icon name="call" class="pt-2"></ion-icon>&nbsp Phone: &nbsp</b>09126241974</li>
+    <li><b><ion-icon name="mail" class="pt-2"></ion-icon>&nbsp Email: </b> splashResort@gamil.com</li>
+    <li><b><ion-icon name="logo-whatsapp" class="pt-2"></ion-icon>&nbsp WhatsApp:</b> +63 912 624 1974 </li>
+  </ul>
+</div>
+
       </div>
       <div
         class="messageform d-flex justify-content-center align-content-center text-center mt-3 ms-auto  w-100"
@@ -120,7 +124,7 @@
           <input
             type="submit"
             value="SEND MESSAGE"
-            class="w-sm-50 w-md-25 align-self-center p-2 rounded border-1  bg-transparent "
+            class="w-sm-100 w-md-100 align-self-center p-2 rounded border-1  mt-4 bg-transparent "
           />
         </form>
       </div>
