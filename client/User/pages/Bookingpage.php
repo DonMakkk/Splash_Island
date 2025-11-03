@@ -1,12 +1,9 @@
 <?php
 session_start();
+include "../../../backend/databaseconfig.php";
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $conn = new mysqli("localhost", "root", "", "splash_island_data");
-
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
+// ROOM RESERVATION PART
+if (isset($_POST["room_submit"])) {
     
     // Collect form data
     $arrivalDate = $_POST["arrival"];
@@ -99,9 +96,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "<script>alert('Please log in first!');</script>";
         header("refresh:1;url=signUpPage.php");
         exit();
-    }
-    $conn->close();
+
 }
+}
+
+//COTTAGE PART 
+
+$conn->close();
 ?>
 
 <!--  FRONT END CODE AREA -->
@@ -359,7 +360,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   </div>
 </ul>
 </div>
-<input type="submit" value="Book now" class="form-control h-50 " >
+<input type="submit" value="Book now" name="room_submit" class="form-control h-50 " >
     </form>
     </main>
     <!-- FOOTER PART -->
@@ -536,4 +537,3 @@ document.addEventListener("DOMContentLoaded", function() {
       
   </body>
 </html>
-

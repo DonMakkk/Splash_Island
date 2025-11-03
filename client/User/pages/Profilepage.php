@@ -102,7 +102,10 @@ if ($_SESSION['email']) {
   <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
   <link rel="stylesheet" href="Profilepage.css" />
-
+  <style>
+    /* Modal Styles */
+    
+  </style>
 </head>
 
 <body>
@@ -195,29 +198,46 @@ if ($_SESSION['email']) {
 
     <!-- Reference Number Section -->
      <?php
-     if ($dataResult->num_rows > 0 && !empty($data)) {
-            foreach ($data as $value) {
-               echo '
-    <div class="InfoDiv mx-auto p-4 text-start mt-4 border">
-      <h4 class="fw-bold text-center mb-4">Reference No: '. urlencode($value["referenceNum"]) .'</h4>
-      <div class="info-text"><span class="info-label">Room Quantity:</span>'. htmlspecialchars($value["rooms"]) . '</div>
-       <div class="info-text"><span class="info-label">Room Type:</span>'. htmlspecialchars(str_replace("_", " ", $value["room_type"] ?? $value["cottage_type"])) .'</div>
-      <div class="info-text"><span class="info-label">Adults:</span>'. htmlspecialchars($value["adults"]) .'</div>
-      <div class="info-text"><span class="info-label">Children:</span>' . htmlspecialchars($value["child"]) .'</div>
-      <div class="info-text"><span class="info-label">Arrival Date:</span>'. htmlspecialchars($value["arrival"]) .'</div>
-      <div class="info-text"><span class="info-label">Departure Date:</span>'. htmlspecialchars($value["departure"]) .'</div>
-       <div class="info-text"><span class="info-label">Message: </span>'. htmlspecialchars($value["message"]) .'</div>
-        <div class="info-text"><span class="info-label">Price: </span>'. htmlspecialchars($value["price"]) .'</div>
-      <div class="d-flex justify-content-between align-items-center mt-3">
-       <a href="?delete=' . urlencode($value["referenceNum"]) . '" class="btn btn-sm btn-danger" ">Cancel</a>
-      </div>
-    </div>';
-            }
-        } else {
-            echo '<h4>' . $emptyCart . '</h4>';
-        }
-   
-    ?>
+if ($dataResult->num_rows > 0 && !empty($data)) {
+    foreach ($data as $value) {
+        echo '
+        <div class="InfoDiv mx-auto p-4 text-start mt-4 border">
+          <h4 class="fw-bold text-center mb-4">Reference No: ' . htmlspecialchars($value["referenceNum"] ?? $value["cottage_reference_number"]) . '</h4>
+
+          <div class="info-text"><span class="info-label">Quantity:</span> ' 
+          . htmlspecialchars($value["room"] ?? $value["cottage_room"] ?? "N/A") . '</div>
+
+          <div class="info-text"><span class="info-label">Type:</span> ' 
+          . htmlspecialchars(str_replace("_", " ", $value["room_type"] ?? $value["cottage_type"] ?? "N/A")) . '</div>
+
+          <div class="info-text"><span class="info-label">Adults:</span> ' 
+          . htmlspecialchars($value["adults"] ?? $value["cottage_adults"] ?? "N/A") . '</div>
+
+          <div class="info-text"><span class="info-label">Children:</span> ' 
+          . htmlspecialchars($value["child"] ?? $value["cottage_children"] ?? "N/A") . '</div>
+
+          <div class="info-text"><span class="info-label">Arrival Date:</span> ' 
+          . htmlspecialchars($value["arrival"] ?? $value["cottage_arrival"] ?? "N/A") . '</div>
+
+          <div class="info-text"><span class="info-label">Departure Date:</span> ' 
+          . htmlspecialchars($value["departure"] ?? $value["cottage_departure"] ?? "N/A") . '</div>
+
+          <div class="info-text"><span class="info-label">Message:</span> ' 
+          . htmlspecialchars($value["message"] ?? $value["cottage_message"] ?? "N/A") . '</div>
+
+          <div class="info-text"><span class="info-label">Price:</span> ' 
+          . htmlspecialchars($value["price"] ?? "N/A") . '</div>
+
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <a href="?delete=' . urlencode($value["referenceNum"] ?? $value["cottage_reference_number"]) . '" class="btn btn-sm btn-danger">Cancel</a>
+          </div>
+        </div>';
+    }
+} else {
+    echo '<h4>' . $emptyCart . '</h4>';
+}
+?>
+
   </div>
 
   <!-- Profile Edit Modal -->
