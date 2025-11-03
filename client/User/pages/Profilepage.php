@@ -51,12 +51,22 @@ if ($_SESSION['email']) {
     $quantity_to_restore = 0;
 
     // Find and remove the canceled reservation
-    foreach ($data as $index => $reservation) {
-        if ($reservation["referenceNum"] == $deleteId) {
-            $room_to_restore = $reservation["room_type"];
-            $quantity_to_restore = $reservation["rooms"];
+      foreach ($data as $index => $reservation) {
+        if (($reservation["referenceNum"] ?? $reservation["cottage_reference_number"]) == $deleteId) {
+            
+            // Detect if this is a cottage or a room
+            if (isset($reservation["cottage_type"])) {
+                $isCottage = true;
+                $item_to_restore = $reservation["cottage_type"];
+                $quantity_to_restore = $reservation["cottage"] ?? 0;
+            } else {
+                $isCottage = false;
+                $item_to_restore = $reservation["room_type"];
+                $quantity_to_restore = $reservation["room"] ?? 0;
+            }
+
         } else {
-            $updatedData[] = $reservation;
+            $updatedData[] = $reservation; // Keep other reservations
         }
     }
 
@@ -217,10 +227,10 @@ if ($dataResult->num_rows > 0 && !empty($data)) {
           . htmlspecialchars($value["child"] ?? $value["cottage_children"] ?? "N/A") . '</div>
 
           <div class="info-text"><span class="info-label">Arrival Date:</span> ' 
-          . htmlspecialchars($value["arrival"] ?? $value["cottage_arrival"] ?? "N/A") . '</div>
+          . htmlspecialchars($value["arrival"] ?? $value["cottage_arrivalDate"] ?? "N/A") . '</div>
 
           <div class="info-text"><span class="info-label">Departure Date:</span> ' 
-          . htmlspecialchars($value["departure"] ?? $value["cottage_departure"] ?? "N/A") . '</div>
+          . htmlspecialchars($value["departure"] ?? $value["cottage_departureDate"] ?? "N/A") . '</div>
 
           <div class="info-text"><span class="info-label">Message:</span> ' 
           . htmlspecialchars($value["message"] ?? $value["cottage_message"] ?? "N/A") . '</div>

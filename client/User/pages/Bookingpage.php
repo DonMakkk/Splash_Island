@@ -53,7 +53,7 @@ if (isset($_POST["room_submit"])) {
         "price" => $total_price,
         "days_of_stay" =>  $total_days
     ];
-    $json_data = json_encode($reservation);
+    
 
     $email = $_SESSION["email"];
 
@@ -101,7 +101,99 @@ if (isset($_POST["room_submit"])) {
 }
 
 //COTTAGE PART 
+if (isset($_POST["cottage_submit"])) {
+    
+    // Collect form data
+    $cottage_arrivalDate = $_POST["cottage_arrival"];
+    $cottage_departureDate = $_POST["cottage_departure"];
+    $cottage_roomQuantity = $_POST["cottage"];
+    $cottage_adultGuestsQuantity = $_POST["cottage_adults"];
+    $cottage_childrenGuestsQuantity = $_POST["cottage_children"];
+    $cottage_message = $_POST["cottage_message"];
+    $cottage_type = trim($_POST["cottage_type"]); // FIXED: trim to remove hidden spaces/tabs
+    $cottage_reference_number = rand(5000, 9999999);
+    $cottage_total_price = 2;
+    $cottage_start = new DateTime($cottage_arrivalDate);
+    $cottage_end = new DateTime($cottage_departureDate);
+    $cottage_interval = $cottage_start->diff($cottage_end);
+    $cottage_total_days = $cottage_interval->days;
 
+    //PRICE UPDATE
+    if($cottage_type == "Bamboo_Beach_Villa"){
+       $cottage_total_price = (2000 *  $cottage_roomQuantity) * $cottage_total_days;
+    }
+    elseif($cottage_type == "Canopy_Lagoon_Suite"){
+       $cottage_total_price = (3000 *  $cottage_roomQuantity) * $cottage_total_days;
+    }
+    elseif($cottage_type == "Deluxe_Ocean_View"){
+       $cottage_total_price = (4000 *  $cottage_roomQuantity) * $cottage_total_days;
+    }
+    elseif($cottage_type == "Oceanfront_Overwater"){
+       $cottage_total_price = (5000 *  $cottage_roomQuantity) * $cottage_total_days;
+    } else {
+      $cottage_total_price = 1;
+    }
+
+    // Create JSON data for reservation
+    $reservation = [
+        "referenceNum" => $cottage_reference_number,
+        "full_name" => $_SESSION['full_name'],
+        "cottage_type" => $cottage_type,
+        "cottage_arrivalDate" => $cottage_arrivalDate,
+        "cottage_departureDate" =>$cottage_departureDate,
+        "cottage" => $cottage_roomQuantity,
+        "adults" => $cottage_adultGuestsQuantity,
+        "child" =>   $cottage_childrenGuestsQuantity,
+        "message" =>   $cottage_message,
+        "price" => $cottage_total_price,
+        "days_of_stay" =>  $cottage_total_days
+    ];
+    
+
+    $email = $_SESSION["email"];
+
+    //Proceed only if logged in
+    if ($_SESSION['login']) {
+        // Get existing reservations of this user
+        $result = $conn->query("SELECT reservation FROM user_account WHERE email = '$email'");
+        $row = $result->fetch_assoc();
+        $cart = $row['reservation'] ? json_decode($row['reservation'], true) : [];
+
+        $cart[] = $reservation;
+        $update_cart = json_encode($cart);
+
+        $stmt = $conn->prepare("UPDATE user_account SET reservation = ? WHERE email = ?");
+        $stmt->bind_param("ss", $update_cart, $email);
+        $stmt->execute();
+
+      
+
+        // Check current available count
+        $check = $conn->query("SELECT cottage_available FROM cottage_available WHERE cottage_name = '$cottage_type'");
+        $data = $check->fetch_assoc();
+
+        if ($data && $data['cottage_available'] >=  $cottage_roomQuantity) {
+            // Decrease the count
+            $update = $conn->query("UPDATE cottage_available 
+                                    SET cottage_available = cottage_available - $cottage_roomQuantity 
+                                    WHERE cottage_name = '$cottage_type'");
+        } else {
+            echo "<script>alert('Sorry, $cottage_type is fully booked or not enough rooms left!');</script>";
+            header("refresh:1;url=Bookingpage.php");
+            exit();
+        }
+
+        echo "<script>alert('Room successfully reserved!');</script>";
+        header("refresh:1;url=Bookingpage.php");
+        exit();
+
+    } else {
+        echo "<script>alert('Please log in first!');</script>";
+        header("refresh:1;url=signUpPage.php");
+        exit();
+
+}
+}
 $conn->close();
 ?>
 
@@ -362,6 +454,89 @@ $conn->close();
 </div>
 <input type="submit" value="Book now" name="room_submit" class="form-control h-50 " >
     </form>
+    <form action="Bookingpage.php" method="post" class="d-flex flex-column gap-3 p-4 border text-center bookingPageForm justify-content-between ms-auto h-75">
+  <h5>Book a Cottage</h5>
+  <p>Rates from <b>PHP 5,999</b> per night</p>
+  <hr>
+  <h4>Plan your Cottage Stay</h4>
+
+  <!-- COTTAGE TYPE -->
+  <div class="w-100">
+    <label for="cottageType" class="form-label fw-light">Select Cottage Type</label>
+    <select class="form-select border-1 border-secondary" id="cottageType" name="cottage_type" required>
+      <option value="bamboo_beach_villa">Bamboo Beach Villa</option>
+      <option value="canopy_lagoon_suite">Canopy Lagoon Suite</option>
+      <option value="deluxe_ocean_view">Deluxe Ocean View</option>
+      <option value="oceanfront_overwater">Oceanfront Overwater</option>
+    </select>
+  </div>
+
+  <!-- DATES -->
+  <div class="d-flex flex-row gap-2 pe-2">
+    <div class="w-50">
+      <label for="">Date of Arrival</label>
+      <input type="datetime-local" name="cottage_arrival" class="form-control" required>
+    </div>
+    <div class="w-50">
+      <label for="">Date of Departure</label>
+      <input type="datetime-local" name="cottage_departure" class="form-control" required>
+    </div>
+  </div>
+
+  <!-- QUANTITY & GUESTS -->
+  <div class="dropdown">
+    <button class="btn w-100 dropdown-toggle border-1 border-secondary" type="button" id="dropdownMenuCottage" data-bs-toggle="dropdown" aria-expanded="false">
+      Cottage Details
+    </button>
+    <ul class="dropdown-menu w-100 p-3" aria-labelledby="dropdownMenuCottage" id="cottageContainer">
+      <div class="d-flex flex-column gap-2">
+        <h6 class="dropdown-item fw-light">Max. 8 guests per cottage</h6>
+
+        <!-- COTTAGE QUANTITY -->
+        <div class="d-flex flex-row gap-2 ps-3 pe-2">
+          <h6 class="fw-light pt-2">Cottage(s)</h6>
+          <div class="d-flex flex-row justify-content-between ms-auto input-group w-50">
+            <button class="btn btn-outline-secondary" type="button" id="cottage-minus">-</button>
+            <input type="number" class="form-control text-center" value="1" min="1" id="cottage-input" name="cottage">
+            <button class="btn btn-outline-secondary" type="button" id="cottage-plus">+</button>
+          </div>
+        </div>
+
+        <!-- ADULT -->
+        <div class="d-flex flex-row gap-2 ps-3 pe-2">
+          <h6 class="fw-light pt-2">Adult(s)</h6>
+          <div class="d-flex flex-row justify-content-between ms-auto input-group w-50">
+            <button class="btn btn-outline-secondary" type="button" id="cottage-adult-minus">-</button>
+            <input type="number" class="form-control text-center" value="1" min="1" id="cottage-adult-input" name="cottage_adults">
+            <button class="btn btn-outline-secondary" type="button" id="cottage-adult-plus">+</button>
+          </div>
+        </div>
+
+        <!-- CHILD -->
+        <div class="d-flex flex-row gap-2 ps-3 pe-2">
+          <h6 class="fw-light pt-2">Children (under 12)</h6>
+          <div class="d-flex flex-row justify-content-between ms-auto input-group w-50">
+            <button class="btn btn-outline-secondary" type="button" id="cottage-child-minus">-</button>
+            <input type="number" class="form-control text-center" value="0" min="0" id="cottage-child-input" name="cottage_children">
+            <button class="btn btn-outline-secondary" type="button" id="cottage-child-plus">+</button>
+          </div>
+        </div>
+
+        <li><hr class="dropdown-divider"></li>
+        <textarea
+          name="cottage_message"
+          id="cottage_message"
+          style="resize: none"
+          placeholder="Your Message"
+          class="p-1 h-50 text-black"
+        ></textarea>
+      </div>
+    </ul>
+  </div>
+
+  <!-- SUBMIT -->
+  <input type="submit" value="Book Cottage" name="cottage_submit" class="form-control h-50">
+</form>
     </main>
     <!-- FOOTER PART -->
 

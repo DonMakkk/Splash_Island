@@ -167,15 +167,15 @@ function showReservationForCottage($reservationData)
 {
     if (!empty($reservationData)) {
         foreach ($reservationData as $data) {
-          if($data['room_type'] == 'Bamboo_Beach_Villa' || $data['room_type'] == 'Canopy_Lagoon_Suite' || $data['room_type'] == 'Deluxe_Ocean_View' || $data['room_type'] == 'Oceanfront_Overwater'){
+          if($data['cottage_type'] == 'bamboo_beach_villa' || $data['cottage_type'] == 'canopy_lagoon_suite' || $data['cottage_type'] == 'deluxe_ocean_view' || $data['cottage_type'] == 'oceanfront_overwater'){
             echo "<tr>";
             echo "<td>" . $data['referenceNum'] . "</td>";
             echo "<td>" . $data['full_name'] . "</td>";
-            echo "<td>" . $data['room_type'] . "</td>";
-            echo "<td>" . $data['arrival'] . "</td>";
-            echo "<td>" . $data['departure'] . "</td>";
+            echo "<td>" . $data['cottage_type'] . "</td>";
+            echo "<td>" . $data['cottage_arrivalDate'] . "</td>";
+            echo "<td>" . $data['cottage_departureDate'] . "</td>";
             echo "<td>" . $data['days_of_stay'] . "</td>";
-            echo "<td>" . $data['rooms'] . "</td>";
+            echo "<td>" . $data['cottage'] . "</td>";
             echo "<td>" . $data['adults'] . "</td>";
             echo "<td>" . $data['child'] . "</td>";
             echo "<td>" . $data['price'] . "</td>";
