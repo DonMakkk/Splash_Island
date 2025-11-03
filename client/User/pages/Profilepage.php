@@ -211,37 +211,59 @@ if ($_SESSION['email']) {
 if ($dataResult->num_rows > 0 && !empty($data)) {
     foreach ($data as $value) {
         echo '
-        <div class="InfoDiv mx-auto p-4 text-start mt-4 border">
-          <h4 class="fw-bold text-center mb-4">Reference No: ' . htmlspecialchars($value["referenceNum"] ?? $value["cottage_reference_number"]) . '</h4>
+<div class="InfoDiv mx-auto p-4 text-start mt-4 border rounded-3 shadow-sm bg-light" style="max-width: 600px;">
+  <h4 class="fw-bold text-center mb-4 text-primary">
+    Reference No: ' . htmlspecialchars($value["referenceNum"] ?? $value["cottage_reference_number"]) . '
+  </h4>
 
-          <div class="info-text"><span class="info-label">Quantity:</span> ' 
-          . htmlspecialchars($value["rooms"] ?? $value["cottage"] ?? "N/A") . '</div>
+  <div class="info-text mb-2">
+    <span class="info-label fw-semibold text-secondary">Quantity:</span>
+    <span class="ms-2">' . htmlspecialchars($value["rooms"] ?? $value["cottage"] ?? "N/A") . '</span>
+  </div>
 
-          <div class="info-text"><span class="info-label">Type:</span> ' 
-          . htmlspecialchars(str_replace("_", " ", $value["room_type"] ?? $value["cottage_type"] ?? "N/A")) . '</div>
+  <div class="info-text mb-2">
+    <span class="info-label fw-semibold text-secondary">Type:</span>
+    <span class="ms-2">' . htmlspecialchars(str_replace("_", " ", $value["room_type"] ?? $value["cottage_type"] ?? "N/A")) . '</span>
+  </div>
 
-          <div class="info-text"><span class="info-label">Adults:</span> ' 
-          . htmlspecialchars($value["adults"] ?? $value["cottage_adults"] ?? "N/A") . '</div>
+  <div class="info-text mb-2">
+    <span class="info-label fw-semibold text-secondary">Adults:</span>
+    <span class="ms-2">' . htmlspecialchars($value["adults"] ?? $value["cottage_adults"] ?? "N/A") . '</span>
+  </div>
 
-          <div class="info-text"><span class="info-label">Children:</span> ' 
-          . htmlspecialchars($value["child"] ?? $value["cottage_children"] ?? "N/A") . '</div>
+  <div class="info-text mb-2">
+    <span class="info-label fw-semibold text-secondary">Children:</span>
+    <span class="ms-2">' . htmlspecialchars($value["child"] ?? $value["cottage_children"] ?? "N/A") . '</span>
+  </div>
 
-          <div class="info-text"><span class="info-label">Arrival Date:</span> ' 
-          . htmlspecialchars($value["arrival"] ?? $value["cottage_arrivalDate"] ?? "N/A") . '</div>
+  <div class="info-text mb-2">
+    <span class="info-label fw-semibold text-secondary">Arrival Date:</span>
+    <span class="ms-2">' . htmlspecialchars($value["arrival"] ?? $value["cottage_arrivalDate"] ?? "N/A") . '</span>
+  </div>
 
-          <div class="info-text"><span class="info-label">Departure Date:</span> ' 
-          . htmlspecialchars($value["departure"] ?? $value["cottage_departureDate"] ?? "N/A") . '</div>
+  <div class="info-text mb-2">
+    <span class="info-label fw-semibold text-secondary">Departure Date:</span>
+    <span class="ms-2">' . htmlspecialchars($value["departure"] ?? $value["cottage_departureDate"] ?? "N/A") . '</span>
+  </div>
 
-          <div class="info-text"><span class="info-label">Message:</span> ' 
-          . htmlspecialchars($value["message"] ?? $value["cottage_message"] ?? "N/A") . '</div>
+  <div class="info-text mb-2">
+    <span class="info-label fw-semibold text-secondary">Message:</span>
+    <span class="ms-2">' . htmlspecialchars($value["message"] ?? $value["cottage_message"] ?? "N/A") . '</span>
+  </div>
 
-          <div class="info-text"><span class="info-label">Price:</span> ' 
-          . htmlspecialchars($value["price"] ?? "N/A") . '</div>
+  <div class="info-text mb-2">
+    <span class="info-label fw-semibold text-secondary">Price:</span>
+    <span class="ms-2">₱' . htmlspecialchars($value["price"] ?? "N/A") . '</span>
+  </div>
 
-          <div class="d-flex justify-content-between align-items-center mt-3">
-            <a href="?delete=' . urlencode($value["referenceNum"] ?? $value["cottage_reference_number"]) . '" class="btn btn-sm btn-danger">Cancel</a>
-          </div>
-        </div>';
+  <div class="d-flex justify-content-center mt-4">
+    <a href="?delete=' . urlencode($value["referenceNum"] ?? $value["cottage_reference_number"]) . '" 
+       class="btn btn-danger btn-sm px-4 rounded-pill shadow-sm">
+      Cancel Reservation
+    </a>
+  </div>
+</div>';
+
     }
 } else {
     echo '<h4>' . $emptyCart . '</h4>';
