@@ -302,7 +302,9 @@
             dish is crafted with the flavors of the ocean and a view of the
             waves.
           </p>
+          <a href="Amenitiespage.php">
           <button class="w-50 p-3 border-1 border-white">Learn More</button>
+            </a>
         </section>
         <img
           src="../assets/restaurant.png"
@@ -325,7 +327,9 @@
             Take a refreshing dip in our sparkling pool, perfect for family fun
             or a relaxing swim after a day at the beach.
           </p>
+           <a href="Amenitiespage.php">
           <button class="w-50 p-3 border-1 border-white">Learn More</button>
+            </a>
         </section>
       </div>
       <h1 class="text-center mt-md-5">GET IN TOUCH</h1>

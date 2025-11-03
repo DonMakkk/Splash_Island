@@ -28,7 +28,7 @@
     ></script>
      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   </head>
-  <body>
+  <body class="d-flex flex-column min-vh-100">
     <!-- NAVPART -->
     <div class="container-fluid navDiv">
       <nav class="navbar navbar-expand-md">
@@ -73,13 +73,12 @@
       </nav>
     </div>
    <!-- FORM AREA -->
-    <main class=" p-md-5 p-2 d-md-flex justify-content-center align-content-center text-center w-100 ">
+    <main class=" p-md-5 p-2 d-md-flex justify-content-center align-content-center text-center flex-grow-1 w-100 h-100">
       <div class=" w-100">
       <h1 class="text-center mt-md-5">GET IN TOUCH</h1>
       <p class="text-center">Have questions? We'd love to hear from you!</p>
       <div class="d-flex gap-3 justify-content-center align-content-center text-center w-100">
-        
-        <img src="../assets/facebook.png" alt="" class="contactLogo">
+        <a href="https://www.facebook.com/marco.bunao.31"><img src="../assets/facebook.png" alt="" class="contactLogo"></a>
         <img src="../assets/Instagram.png" alt="" class="contactLogo">
         <img src="../assets/tiktok.png" alt="" class="contactLogo">
       </div>
@@ -87,7 +86,7 @@
       <div
         class="messageform d-flex justify-content-center align-content-center text-center mt-3 ms-auto  w-100"
       >
-        <form action="Contactpage.php" method="post" class="d-flex card flex-column gap-2 w-50 p-2 ms-auto">
+        <form action="Contactpage.php" method="post" class="d-flex card flex-column gap-2 h-ms-75 w-50 p-5 ms-auto">
           <div class="d-md-flex flex-md-row w-100 gap-2 d-flex flex-column column-gap-2">
            <div class="form-floating w-100 ">
             <input type="text" name="full_name" id="floatingInput" class="form-control" placeholder="Full Name">
@@ -265,11 +264,7 @@ $sql = "INSERT INTO `user_inquiries`(`full_name`, `email`, `phone_number`, `date
         VALUES ('$full_name', '$email', '$phone_num', '$date', '$message')";
 
 $result = $conn->query($sql);
-if($result){
-    echo "Message sent successfully!";
-} else {
-    echo "Error: " . $sql . "<br>" . $conn->error;
-}
+
 $conn->close();
 }
 ?>

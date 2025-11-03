@@ -66,7 +66,7 @@ if ($_SESSION['email']) {
     $updateQuery->bind_param("ss", $newJson, $_SESSION["email"]);
     $updateQuery->execute();
 
-    // ✅ Add the canceled rooms back to available count
+    //  Add the canceled rooms back to available count
     if ($room_to_restore && $quantity_to_restore > 0) {
         $restore = $conn->prepare("
             UPDATE rooms_available 
