@@ -28,7 +28,7 @@ if ($reservationResult->num_rows > 0) {
     }
 }
 
-// ✅ DELETE RESERVATION AND RESTORE ROOM COUNT
+//  DELETE RESERVATION AND RESTORE ROOM COUNT
 if (isset($_GET['deleteReservation'])) {
     $deleteRef = $_GET['deleteReservation'];
 

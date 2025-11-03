@@ -43,24 +43,45 @@ if ($_SESSION['email']) {
         $data = json_decode($json_data, true);
         
 
-        if (isset($_GET['delete'])) {
-            $deleteId = $_GET['delete'];
+       if (isset($_GET['delete'])) {
+    $deleteId = $_GET['delete'];
 
-            $updatedData = [];
-            foreach ($data as $index => $reservation) {
-                if ($reservation["referenceNum"] != $deleteId) {
-                    $updatedData[] = $reservation;
-                }
-            }
+    $updatedData = [];
+    $room_to_restore = null;
+    $quantity_to_restore = 0;
 
-            $newJson = json_encode($updatedData);
-            $updateQuery = $conn->prepare("UPDATE user_account SET reservation = ? WHERE email = ?");
-            $updateQuery->bind_param("ss", $newJson, $_SESSION["email"]);
-            $updateQuery->execute();
-
-            header("Location: " . $_SERVER['PHP_SELF']);
-            exit;
+    // Find and remove the canceled reservation
+    foreach ($data as $index => $reservation) {
+        if ($reservation["referenceNum"] == $deleteId) {
+            $room_to_restore = $reservation["room_type"];
+            $quantity_to_restore = $reservation["rooms"];
+        } else {
+            $updatedData[] = $reservation;
         }
+    }
+
+    // Update JSON reservations
+    $newJson = json_encode($updatedData);
+    $updateQuery = $conn->prepare("UPDATE user_account SET reservation = ? WHERE email = ?");
+    $updateQuery->bind_param("ss", $newJson, $_SESSION["email"]);
+    $updateQuery->execute();
+
+    // ✅ Add the canceled rooms back to available count
+    if ($room_to_restore && $quantity_to_restore > 0) {
+        $restore = $conn->prepare("
+            UPDATE rooms_available 
+            SET room_available = room_available + ? 
+            WHERE room_name = ?
+        ");
+        $restore->bind_param("is", $quantity_to_restore, $room_to_restore);
+        $restore->execute();
+    }
+
+    echo "<script>alert('Reservation canceled. Rooms restored.');</script>";
+    header("refresh:1;url=" . $_SERVER['PHP_SELF']);
+    exit;
+}
+
     } else {
         $emptyCart = 'No reservations yet';
     }
