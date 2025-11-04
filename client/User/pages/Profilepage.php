@@ -87,7 +87,7 @@ if ($_SESSION['email']) {
         $restore->execute();
     }
 
-    echo "<script>alert('Reservation canceled. Rooms restored.');</script>";
+    echo "<script>confirm('Reservation canceled. Rooms restored.');</script>";
     header("refresh:1;url=" . $_SERVER['PHP_SELF']);
     exit;
 }
@@ -97,6 +97,11 @@ if ($_SESSION['email']) {
     }
 } else {
     header("Location: loginPage.php");
+    exit();
+}
+if (isset($_POST['logout'])) {
+    destroySession();
+    header("Location: login.php");
     exit();
 }
 ?>
@@ -145,7 +150,9 @@ if ($_SESSION['email']) {
               <ion-icon name="person-circle-outline"></ion-icon>
             </button>
             <ul class="dropdown-menu dropdown-menu-end profile-dropdown">
-              <li><button class="dropdown-item" onclick="if(confirm('Log out?')) location.href='Homepage.php'">Log Out</button></li>
+              <form method="post">
+              <li><button class="dropdown-item" name="logout" onclick="if(confirm('Log out?')) location.href='Homepage.php'">Log Out</button></li>
+              </form>
               <li><button class="dropdown-item" data-bs-toggle="dropdown">Cancel</button></li>
             </ul>
           </div>

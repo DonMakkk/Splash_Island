@@ -1,6 +1,7 @@
 <?php
+session_start();
 include "../../backend/databaseconfig.php";
-
+if($_SESSION['adminEmail'] ){
 // DELETE Functionality for inquiries
 if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
@@ -112,29 +113,6 @@ function showInquiries($result)
     }
 }
 
-// function showReservation($reservationData)
-// {
-//     if (!empty($reservationData)) {
-//         foreach ($reservationData as $data) {
-//             echo "<tr>";
-//             echo "<td>" . $data['referenceNum'] . "</td>";
-//             echo "<td>" . $data['full_name'] . "</td>";
-//             echo "<td>" . $data['room_type'] . "</td>";
-//             echo "<td>" . $data['arrival'] . "</td>";
-//             echo "<td>" . $data['departure'] . "</td>";
-//             echo "<td>" . $data['days_of_stay'] . "</td>";
-//             echo "<td>" . $data['rooms'] . "</td>";
-//             echo "<td>" . $data['adults'] . "</td>";
-//             echo "<td>" . $data['child'] . "</td>";
-//             echo "<td>" . $data['price'] . "</td>";
-//             echo "<td>" . $data['message'] . "</td>";
-//             echo "<td><a href='?deleteReservation=" . $data["referenceNum"] . "' class='btn btn-sm btn-danger'>Delete</a></td>";
-//             echo "</tr>";
-//         }
-//     } else {
-//         echo "<tr><td colspan='8' class='text-center text-muted'>No Data Yet</td></tr>";
-//     }
-// }
 
 function showReservationForRoom($reservationData)
 {
@@ -241,6 +219,10 @@ function showCottageAvailable($cottage_available_result)
         echo "<tr><td colspan='8' class='text-center text-muted'>No Data Yet</td></tr>";
     }
 }
+}else{
+      header("Location: adminLoginPage.php");
+      exit();
+}
 ?>
 
 
@@ -262,7 +244,7 @@ function showCottageAvailable($cottage_available_result)
 
     <main class="d-flex flex-row" style="height: 100vh;">
       <!-- Sidebar -->
-      <div class="d-flex flex-column p-3 text-white bg-dark" style="width: 280px;">
+      <div class="d-flex flex-column p-3 text-white bg-dark h-100" style="width: 280px;">
         <h4 class="mb-4">Dashboard</h4>
         <form method="post">
           <button type="submit" name="inquiries" class="btn btn-outline-light mb-2 w-100 text-start">Inquiries</button>
