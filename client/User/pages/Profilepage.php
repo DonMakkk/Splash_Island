@@ -87,7 +87,7 @@ if ($_SESSION['email']) {
         $restore->execute();
     }
 
-    echo "<script>confirm('Reservation canceled. Rooms restored.');</script>";
+   
     header("refresh:1;url=" . $_SERVER['PHP_SELF']);
     exit;
 }
@@ -209,13 +209,14 @@ if (isset($_POST['logout'])) {
     </div>
 
     <!-- Reservation Information Divider -->
-    <div class="ReservationDiv mx-auto p-3 text-center mt-4">
-      <h5 class="fw-bold mb-0">Reservation Information</h5>
-    </div>
+  
 
     <!-- Reference Number Section -->
      <?php
 if ($dataResult->num_rows > 0 && !empty($data)) {
+  echo '  <div class="ReservationDiv mx-auto p-3 text-center mt-4">
+      <h5 class="fw-bold mb-0">Reservation Information</h5>
+    </div>';
     foreach ($data as $value) {
         echo '
 <div class="InfoDiv mx-auto p-4 text-start mt-4 border rounded-3 shadow-sm bg-light" style="max-width: 600px;">
@@ -264,16 +265,47 @@ if ($dataResult->num_rows > 0 && !empty($data)) {
   </div>
 
   <div class="d-flex justify-content-center mt-4">
-    <a href="?delete=' . urlencode($value["referenceNum"] ?? $value["cottage_reference_number"]) . '" 
-       class="btn btn-danger btn-sm px-4 rounded-pill shadow-sm">
-      Cancel Reservation
-    </a>
+   <!-- Cancel Button that triggers modal -->
+<div class="d-flex justify-content-center mt-4">
+  <button 
+    type="button" 
+    class="btn btn-danger btn-sm px-4 rounded-pill shadow-sm"
+    data-bs-toggle="modal" 
+    data-bs-target="#cancelModal' . htmlspecialchars($value["referenceNum"] ?? $value["cottage_reference_number"]) . '">
+    Cancel Reservation
+  </button>
+</div>
+
+<!-- Modal for this reservation -->
+<div class="modal fade" 
+     id="cancelModal' . htmlspecialchars($value["referenceNum"] ?? $value["cottage_reference_number"]) . '" 
+     tabindex="-1" 
+     aria-labelledby="cancelModalLabel" 
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-danger">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title fw-bold" id="cancelModalLabel">Confirm Cancellation</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <p class="fs-5 mb-2">Are you sure you want to cancel this reservation?</p>
+        <p class="text-muted small">Reference No: ' . htmlspecialchars($value["referenceNum"] ?? $value["cottage_reference_number"]) . '</p>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+        <a href="?delete=' . urlencode($value["referenceNum"] ?? $value["cottage_reference_number"]) . '" class="btn btn-danger">Yes, Cancel</a>
+      </div>
+    </div>
+  </div>
+</div>
+
   </div>
 </div>';
 
     }
 } else {
-    echo '<h4>' . $emptyCart . '</h4>';
+    echo '<h4 class="text-center"> No Reservations Yet </h4>';
 }
 ?>
 

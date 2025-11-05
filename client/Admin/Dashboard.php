@@ -106,6 +106,7 @@ function showInquiries($result)
             echo "<td>" . $data['date'] . "</td>";
             echo "<td>" . $data['message'] . "</td>";
             echo "<td><a href='?delete=" . $data["id"] . "' class='btn btn-sm btn-danger'>Delete</a></td>";
+
             echo "</tr>";
         }
     } else {
@@ -342,5 +343,6 @@ function showCottageAvailable($cottage_available_result)
         </table>
       </div>
     </main>
+    
   </body>
 </html>

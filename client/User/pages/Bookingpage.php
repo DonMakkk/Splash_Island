@@ -376,7 +376,7 @@ $conn->close();
     <form action="Bookingpage.php" method="post" class=" d-flex  flex-column gap-3 p-4  border  text-center bookingPageForm justify-content-between ms-auto h-75" >
         <!-- FULL NAME -->
          <h5>Book this Offer</h5>
-         <p>Rates from <b>PHP 29,999</b> for nights</p>
+         <p>Rates from <b>₱ 2000 - 6000</b> for nights</p>
          <hr>
          <h4>Plan your Visit</h4>
       
@@ -395,11 +395,11 @@ $conn->close();
         <div class="d-flex flex-row gap-2 pe-2">
           <div class="w-50">
             <label for="">Date of Arrival</label>
-           <input type="datetime-local" name="arrival" id="arrival" class="form-control ">
+           <input type="datetime-local" name="arrival" id="arrival" class="form-control " required>
           </div>
         <div class="w-50">
           <label for="">Date of Departure</label>
-           <input type="datetime-local" name="departure" id="departure" class="form-control">
+           <input type="datetime-local" name="departure" id="departure" class="form-control" required>
           </div>
         </div>
         <!-- ROOM TYPE -->
@@ -452,7 +452,28 @@ $conn->close();
   </div>
 </ul>
 </div>
-<input type="submit" value="Book now" name="room_submit" class="form-control h-50 " >
+<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmRoomModal">
+  Book Room Now
+</button>
+
+<div class="modal fade" id="confirmRoomModal" tabindex="-1" aria-labelledby="confirmRoomModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title" id="confirmRoomModalLabel">Confirm Room Booking</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <p>Are you sure you want to reserve this room now?</p>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+        <input type="submit" value="Yes" name="room_submit" class="btn btn-danger">
+      </div>
+    </div>
+  </div>
+</div>
+
     </form>
     </main>
     <!-- cottage -->
@@ -558,7 +579,7 @@ $conn->close();
       </div>
     <form action="Bookingpage.php" method="post" class="d-flex flex-column gap-3 p-4 border text-center bookingPageForm justify-content-between ms-auto h-75">
   <h5>Book a Cottage</h5>
-  <p>Rates from <b>PHP 5,999</b> per night</p>
+  <p>Rates from <b>₱2000 - 5000</b> per night</p>
   <hr>
   <h4>Plan your Cottage Stay</h4>
 
@@ -635,9 +656,30 @@ $conn->close();
       </div>
     </ul>
   </div>
-
+<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmCancelModal">
+  Book Cottage Now
+</button>
   <!-- SUBMIT -->
-  <input type="submit" value="Book Cottage" name="cottage_submit" class="form-control h-50">
+
+
+<div class="modal fade" id="confirmCancelModal" tabindex="-1" aria-labelledby="confirmCancelModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title" id="confirmCancelModalLabel"></h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <p>Are you sure you want to reserve now?</p>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+        <input type="submit" value="Yes" name="cottage_submit" class="btn btn-danger">
+      </div>
+    </div>
+  </div>
+</div>
+ 
 </form>
     </main>
     <!-- FOOTER PART -->
