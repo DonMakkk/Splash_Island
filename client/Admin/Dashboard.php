@@ -95,24 +95,50 @@ $cottageAvaialbleSql = "SELECT * FROM cottage_available";
 $cottage_available_result = $conn->query($cottageAvaialbleSql);
 
 // DISPLAY FUNCTIONS
-function showInquiries($result)
-{
+  // DISPLAY FUNCTIONS
+  function showInquiries($result)
+  {
     if ($result->num_rows > 0) {
-        while ($data = $result->fetch_assoc()) {
-            echo "<tr>";
-            echo "<th scope='row'>" . $data['id'] . "</th>";
-            echo "<td>" . $data['full_name'] . "</td>";
-            echo "<td>" . $data['email'] . "</td>";
-            echo "<td>" . $data['date'] . "</td>";
-            echo "<td>" . $data['message'] . "</td>";
-            echo "<td><a href='?delete=" . $data["id"] . "' class='btn btn-sm btn-danger'>Delete</a></td>";
+      while ($data = $result->fetch_assoc()) {
+        $modalId = "deleteInquiryModal" . $data['id'];
 
-            echo "</tr>";
-        }
+        echo "<tr>";
+        echo "<th scope='row'>" . $data['id'] . "</th>";
+        echo "<td>" . htmlspecialchars($data['full_name']) . "</td>";
+        echo "<td>" . htmlspecialchars($data['email']) . "</td>";
+        echo "<td>" . htmlspecialchars($data['date']) . "</td>";
+        echo "<td>" . htmlspecialchars($data['message']) . "</td>";
+
+        echo "
+        <td>
+          <button type='button' class='btn btn-sm btn-danger' data-bs-toggle='modal' data-bs-target='#$modalId'>
+            Delete
+          </button>
+
+          <div class='modal fade' id='$modalId' tabindex='-1' aria-labelledby='{$modalId}Label' aria-hidden='true'>
+            <div class='modal-dialog modal-dialog-centered'>
+              <div class='modal-content border-0 shadow'>
+                <div class='modal-header bg-danger text-white'>
+                  <h5 class='modal-title' id='{$modalId}Label'>Confirm Delete</h5>
+                  <button type='button' class='btn-close btn-close-white' data-bs-dismiss='modal'></button>
+                </div>
+                <div class='modal-body text-center'>
+                  <p>Are you sure you want to delete this inquiry?</p>
+                </div>
+                <div class='modal-footer justify-content-center'>
+                  <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Cancel</button>
+                  <a href='?delete=" . urlencode($data["id"]) . "' class='btn btn-danger'>Yes, Delete</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </td>";
+        echo "</tr>";
+      }
     } else {
-        echo "<tr><td colspan='6' class='text-center text-muted'>No Data Yet</td></tr>";
+      echo "<tr><td colspan='6' class='text-center text-muted'>No Data Yet</td></tr>";
     }
-}
+  }
 
 
 function showReservationForRoom($reservationData)
@@ -140,8 +166,34 @@ function showReservationForRoom($reservationData)
                 echo "<td>" . htmlspecialchars($data['child']) . "</td>";
                 echo "<td>" . htmlspecialchars($data['price']) . "</td>";
                 echo "<td>" . htmlspecialchars($data['message']) . "</td>";
-                echo "<td><a href='?deleteReservation=" . urlencode($data["referenceNum"]) . "' class='btn btn-sm btn-danger'>Delete</a></td>";
-                echo "</tr>";
+               echo "
+ <td>
+      <button type='button' class='btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#confirmDeleteModalForRoom'>
+        Delete
+      </button>
+
+      <!-- Modal -->
+      <div class='modal fade' id='confirmDeleteModalForRoom' tabindex='-1' aria-labelledby='confirmDeleteModalForRoom' aria-hidden='true'>
+        <div class='modal-dialog modal-dialog-centered'>
+          <div class='modal-content border-0 shadow'>
+            <div class='modal-header bg-danger text-white'>
+              <h5 class='modal-title' id='confirmDeleteModalForRoom'>Confirm Delete</h5>
+              <button type='button' class='btn-close btn-close-white' data-bs-dismiss='modal' aria-label='Close'></button>
+            </div>
+            <div class='modal-body text-center'>
+              <p>Are you sure you want to delete this room reservation?</p>
+            </div>
+            <div class='modal-footer justify-content-center'>
+              <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Cancel</button>
+              <a href='?delete=" . urlencode($data['referenceNum']) . "' class='btn btn-danger'>Yes, Delete</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </td>
+ 
+";
+
             }
         }
         if (!$hasData) {
@@ -178,7 +230,33 @@ function showReservationForCottage($reservationData)
                 echo "<td>" . htmlspecialchars($data['child'] ?? $data['cottage_children'] ?? 'N/A') . "</td>";
                 echo "<td>" . htmlspecialchars($data['price']) . "</td>";
                 echo "<td>" . htmlspecialchars($data['message']) . "</td>";
-                echo "<td><a href='?deleteReservation=" . urlencode($data["referenceNum"]) . "' class='btn btn-sm btn-danger'>Delete</a></td>";
+                  echo "
+  <td>
+    <button type='button' class='btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#confirmDeleteCottageModal'>
+      Delete
+    </button>
+
+    <!-- Cottage Delete Confirmation Modal -->
+    <div class='modal fade' id='confirmDeleteCottageModal' tabindex='-1' aria-labelledby='confirmDeleteCottageModalLabel' aria-hidden='true'>
+      <div class='modal-dialog modal-dialog-centered'>
+        <div class='modal-content border-0 shadow'>
+          <div class='modal-header bg-danger text-white'>
+            <h5 class='modal-title' id='confirmDeleteCottageModalLabel'>Confirm Cottage Deletion</h5>
+            <button type='button' class='btn-close btn-close-white' data-bs-dismiss='modal' aria-label='Close'></button>
+          </div>
+          <div class='modal-body text-center'>
+            <p>Are you sure you want to delete this cottage reservation?</p>
+          </div>
+          <div class='modal-footer justify-content-center'>
+            <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Cancel</button>
+            <a href='?deleteCottage=" . urlencode($data['referenceNum']) . "' class='btn btn-danger'>Yes, Delete</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </td>
+";
+
                 echo "</tr>";
             }
         }
@@ -343,6 +421,10 @@ function showCottageAvailable($cottage_available_result)
         </table>
       </div>
     </main>
-    
+    </main>
+
+    <!-- Bootstrap JS (required for modals) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
+
