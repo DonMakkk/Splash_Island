@@ -183,12 +183,12 @@ if (isset($_POST["cottage_submit"])) {
             exit();
         }
 
-        echo "<script>alert('Room successfully reserved!');</script>";
+      
         header("refresh:1;url=Bookingpage.php");
         exit();
 
     } else {
-        echo "<script>alert('Please log in first!');</script>";
+       
         header("refresh:1;url=signUpPage.php");
         exit();
 

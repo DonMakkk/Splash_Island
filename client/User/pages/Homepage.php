@@ -75,90 +75,16 @@
     </div>
 
     <!-- HERO SECTION -->
-    <header>
-      <div id="carouselExampleCaptions" class="carousel slide h-75">
-        <div class="carousel-indicators">
-          <button
-            type="button"
-            data-bs-target="#carouselExampleCaptions"
-            data-bs-slide-to="0"
-            class="active"
-            aria-current="true"
-            aria-label="Slide 1"
-          ></button>
-          <button
-            type="button"
-            data-bs-target="#carouselExampleCaptions"
-            data-bs-slide-to="1"
-            aria-label="Slide 2"
-          ></button>
-          <button
-            type="button"
-            data-bs-target="#carouselExampleCaptions"
-            data-bs-slide-to="2"
-            aria-label="Slide 3"
-          ></button>
-        </div>
-        <div class="carousel-inner">
-          <div class="carousel-item active">
-            <img src="../assets/headerBg.png" class="d-block w-100" alt="..." />
-            <div class="carousel-caption">
-              <h5>Splash Resort Your Beachside Escape</h5>
-              <p>
-                Wake up to ocean views from our cozy rooms and private cottages.
-                Relax by the infinity pool, stroll the sandy shore, and book
-                your perfect stay today.
-                <a href="Bookingpage.php">Reserve now</a>
-              </p>
-            </div>
-          </div>
-          <div class="carousel-item">
-            <img
-              src="../assets/TerracedGreenOverlook.webp"
-              class="d-block w-100"
-              alt="..."
-            />
-            <div class="carousel-caption">
-              <h5>Rooms • Cottages • Pool • Beach View</h5>
-              <p>
-                Choose from seaside rooms or tucked-away cottages with stunning
-                beach vistas. Enjoy a crystal-clear pool, shoreline sunsets, and
-                easy online reservations for a hassle-free getaway.
-              </p>
-            </div>
-          </div>
-          <div class="carousel-item">
-            <img src="../assets/seaview.jpg" class="d-block w-100" alt="..." />
-            <div class="carousel-caption">
-              <h5>Book Your Beach Getaway</h5>
-              <p>
-                Rooms and cottages with pool access and breathtaking beach
-                views. Limited slots
-                <a href="Bookingpage.php">reserve your dates</a> now!
-              </p>
-            </div>
-          </div>
-        </div>
-        <button
-          class="carousel-control-prev"
-          type="button"
-          data-bs-target="#carouselExampleCaptions"
-          data-bs-slide="prev"
-        >
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden z-3">Previous</span>
-        </button>
-        <button
-          class="carousel-control-next"
-          type="button"
-          data-bs-target="#carouselExampleCaptions"
-          data-bs-slide="next"
-        >
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden z-3">Next</span>
-        </button>
-      </div>
-    </header>
+   <header id="homepageHeader" >
+  <video autoplay muted loop playsinline id="bgVideo">
+    <source src="../assets/Hotel.mp4" type="video/mp4">
+  </video>
+  <div class="header-content">
+    <h1>Welcome to Splash Resort</h1>
+    <p>Enjoy paradise by the sea</p>
+  </div>
+</header>
+
     <!-- MAIN PART -->
     <main class="pb-3 main">
       <h3 class="text-center pt-3 fw-lighter">Amenities</h3>
